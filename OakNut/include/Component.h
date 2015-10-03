@@ -1,6 +1,7 @@
 #pragma once
 #include "Object.h"
 
+#include <assert.h>
 #include <string>
 #include <unordered_map>
 
@@ -31,12 +32,7 @@ namespace onut
         virtual void onDraw() {}
 
     protected:
-        template<typename Ttype>
-        bool registerProperty(const std::string& name, Ttype* pVar)
-        {
-            m_properties[name] = pVar;
-            return true;
-        }
+        template<typename Ttype> bool registerProperty(const std::string& name, Ttype* pVar);
 
     private:
         friend class ComponentManager;
@@ -51,4 +47,16 @@ namespace onut
         COMPONENT_PROPERTY(bool, Visible, true);
         COMPONENT_PROPERTY(std::string, Name, "");
     };
+
+    template<typename Ttype>
+    inline bool Component::registerProperty(const std::string& name, Ttype* pVar)
+    {
+        // Assert if dupilcated property.
+        // You added a property using COMPONENT_PROPERTY macro, but a
+        // property with that name already exist in this component.
+        assert(m_properties.find(name) == m_properties.end());
+
+        m_properties[name] = pVar;
+        return true;
+    }
 }
