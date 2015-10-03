@@ -88,6 +88,10 @@
   <ItemGroup>
     <ClInclude Include="src\Sample.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\game.json" />
+    <None Include="assets\scenes\sample.json" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -1,4 +1,5 @@
 #if defined(WIN32)
+#include "Game.h"
 #include "StringUtils.h"
 #include "Window_win.h"
 
@@ -84,7 +85,8 @@ void onut::Window_win::onCreate()
     auto screenW = GetSystemMetrics(SM_CXSCREEN);
     auto screenH = GetSystemMetrics(SM_CYSCREEN);
 
-    auto windowNameUTF16 = onut::utf8ToUtf16(getWindowName());
+    auto windowNameUTF16 = onut::utf8ToUtf16(onut::Game::getGame()->getName());
+    auto resolution = onut::Game::getGame()->getResolution();
 
     if (isFullscreen)
     {
@@ -98,8 +100,8 @@ void onut::Window_win::onCreate()
     }
     else
     {
-        auto posX = (screenW - 1280) / 2;
-        auto posY = (screenH - 720) / 2;
+        auto posX = (screenW - resolution.x) / 2;
+        auto posY = (screenH - resolution.y) / 2;
 
         // Create the window
         if (!isResizable)
@@ -107,7 +109,7 @@ void onut::Window_win::onCreate()
             m_handle = CreateWindow(TEXT("OakNutWindow"),
                                     windowNameUTF16.c_str(),
                                     WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_VISIBLE,
-                                    posX, posY, 1280, 720,
+                                    posX, posY, resolution.x, resolution.y,
                                     nullptr, nullptr, nullptr, nullptr);
         }
         else
@@ -115,7 +117,7 @@ void onut::Window_win::onCreate()
             m_handle = CreateWindow(TEXT("OakNutWindow"),
                                     windowNameUTF16.c_str(),
                                     WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-                                    posX, posY, 1280, 720,
+                                    posX, posY, resolution.x, resolution.y,
                                     nullptr, nullptr, nullptr, nullptr);
         }
     }

@@ -1,30 +1,40 @@
+#include "Dispatcher.h"
 #include "Game.h"
 #include "IRenderer.h"
 #include "IWindow.h"
 #include "Main.h"
+#include "SceneManager.h"
 #include "Timing.h"
 
 void onut::Main::main()
 {
-    // Create the game using the factory method that the user has to define
-    auto pGame = Game::CreateGame();
-    pGame->retain();
+    onut::Game::s_pGame = Game::CreateGame();
+    onut::Game::s_pWindow = IWindow::createWindow();
+    onut::Game::s_pDispatcher = new onut::Dispatcher();
+    onut::Game::s_pTiming = new onut::Timing();
+    onut::Game::s_pRenderer = IRenderer::createRenderer(onut::Game::s_pWindow);
+    onut::Game::s_pSceneManager = new onut::SceneManager();
 
-    // Our window component
-    auto pWindow = IWindow::createWindow();
-    pWindow->setWindowName(pGame->getName());
+    onut::Game::s_pGame->retain();
+
+    // Load game properties from game.json
+    onut::Game::s_pGame->loadPropertiesFromFile("assets/game.json");
 
     // Add base components to it
-    pGame->addComponent(pWindow);
-    pGame->addComponent(new onut::Timing());
-    pGame->addComponent(IRenderer::createRenderer(pWindow));
+    onut::Game::s_pGame->addComponent(onut::Game::s_pWindow);
+    onut::Game::s_pGame->addComponent(onut::Game::s_pTiming);
+    onut::Game::s_pGame->addComponent(onut::Game::s_pDispatcher);
+    onut::Game::s_pGame->addComponent(onut::Game::s_pSceneManager);
+    onut::Game::s_pGame->addComponent(onut::Game::s_pRenderer);
 
-    while (pWindow->getEnabled())
+    onut::Game::s_pGame->onLoaded();
+
+    while (onut::Game::s_pWindow->getEnabled())
     {
-        pGame->onUpdate();
-        pGame->onCreate(); // This will call newly created components if not already initialized
-        pGame->onDraw();
+        onut::Game::s_pGame->onUpdate();
+        onut::Game::s_pGame->onCreate(); // This will call newly created components if not already initialized
+        onut::Game::s_pGame->onDraw();
     }
 
-    pGame->release();
+    onut::Game::s_pGame->release();
 }

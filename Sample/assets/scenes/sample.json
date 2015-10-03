@@ -1,0 +1,11 @@
+{
+    "Name": "SceneRoot",
+    "Components": [
+        [
+            "SceneNode",
+            {
+                "Position": [ 10, 0, 0 ]
+            }
+        ]
+    ]
+}

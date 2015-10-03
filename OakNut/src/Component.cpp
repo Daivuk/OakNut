@@ -17,3 +17,8 @@ bool onut::Component::isCreated() const
 {
     return m_created;
 }
+
+onut::ComponentManager* onut::Component::getComponentManager() const
+{
+    return m_pComponentManager;
+}

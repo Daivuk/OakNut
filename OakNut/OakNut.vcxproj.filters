@@ -3,8 +3,6 @@
   <ItemGroup>
     <ClCompile Include="src\main_win.cpp" />
     <ClCompile Include="src\Main.cpp" />
-    <ClCompile Include="src\Object.cpp" />
-    <ClCompile Include="src\Timing.cpp" />
     <ClCompile Include="src\Renderer_d3d11.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
@@ -27,15 +25,40 @@
       <Filter>Entity</Filter>
     </ClCompile>
     <ClCompile Include="src\Game.cpp" />
-    <ClCompile Include="src\StringUtils.cpp" />
     <ClCompile Include="src\PropertyManager.cpp">
       <Filter>Serialization</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Dispatcher.cpp">
+      <Filter>Async</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SceneManager.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Timing.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\StringUtils.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Object.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SceneNode.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="include\glm\detail\glm.cpp" />
+    <ClCompile Include="src\json\json_writer.cpp">
+      <Filter>json</Filter>
+    </ClCompile>
+    <ClCompile Include="src\json\json_reader.cpp">
+      <Filter>json</Filter>
+    </ClCompile>
+    <ClCompile Include="src\json\json_value.cpp">
+      <Filter>json</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Main.h" />
-    <ClInclude Include="include\Object.h" />
-    <ClInclude Include="src\Timing.h" />
     <ClInclude Include="src\Renderer_d3d11.h">
       <Filter>Renderer</Filter>
     </ClInclude>
@@ -58,9 +81,29 @@
       <Filter>Entity</Filter>
     </ClInclude>
     <ClInclude Include="include\Game.h" />
-    <ClInclude Include="include\StringUtils.h" />
     <ClInclude Include="include\PropertyManager.h">
       <Filter>Serialization</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Synchronous.h">
+      <Filter>Async</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Dispatcher.h">
+      <Filter>Async</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SceneManager.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Timing.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\StringUtils.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Object.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SceneNode.h">
+      <Filter>Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -78,6 +121,18 @@
     </Filter>
     <Filter Include="Serialization">
       <UniqueIdentifier>{1c3dd894-1ab8-4554-9068-c563a66a9ece}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Async">
+      <UniqueIdentifier>{0f084ed0-dd5a-44d6-a388-84bf740965da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{78a2a71a-ed61-4a2b-a9a5-a6c0f1b90960}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{91eaea48-ee57-4b53-b45e-0ccf90fa1382}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="json">
+      <UniqueIdentifier>{cc13ee8d-9d49-4fee-92c0-54a50b90da29}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

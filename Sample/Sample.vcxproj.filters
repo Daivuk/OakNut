@@ -6,4 +6,8 @@
   <ItemGroup>
     <ClInclude Include="src\Sample.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\scenes\sample.json" />
+    <None Include="assets\game.json" />
+  </ItemGroup>
 </Project>

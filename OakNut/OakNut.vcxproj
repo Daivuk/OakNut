@@ -11,29 +11,40 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="include\glm\detail\glm.cpp" />
     <ClCompile Include="src\Component.cpp" />
     <ClCompile Include="src\ComponentManager.cpp" />
+    <ClCompile Include="src\Dispatcher.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\IRenderer.cpp" />
+    <ClCompile Include="src\json\json_reader.cpp" />
+    <ClCompile Include="src\json\json_value.cpp" />
+    <ClCompile Include="src\json\json_writer.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\main_win.cpp" />
     <ClCompile Include="src\Object.cpp" />
     <ClCompile Include="src\PropertyManager.cpp" />
     <ClCompile Include="src\Renderer_d3d11.cpp" />
+    <ClCompile Include="src\SceneManager.cpp" />
     <ClCompile Include="src\StringUtils.cpp" />
     <ClCompile Include="src\Timing.cpp" />
     <ClCompile Include="src\IWindow.cpp" />
+    <ClCompile Include="src\SceneNode.cpp" />
     <ClCompile Include="src\Window_win.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Component.h" />
     <ClInclude Include="include\ComponentManager.h" />
+    <ClInclude Include="include\Dispatcher.h" />
     <ClInclude Include="include\Entity.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\Object.h" />
     <ClInclude Include="include\PropertyManager.h" />
+    <ClInclude Include="include\SceneManager.h" />
     <ClInclude Include="include\StringUtils.h" />
+    <ClInclude Include="include\Synchronous.h" />
+    <ClInclude Include="include\SceneNode.h" />
     <ClInclude Include="src\IRenderer.h" />
     <ClInclude Include="src\Main.h" />
     <ClInclude Include="src\Renderer_d3d11.h" />

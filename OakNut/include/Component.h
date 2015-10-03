@@ -4,6 +4,8 @@
 
 namespace onut
 {
+    class ComponentManager;
+
     class Component : 
         public PropertyManager, // It has serializable properties
         public Object // It has ref counting
@@ -13,6 +15,7 @@ namespace onut
         virtual ~Component();
 
         bool isCreated() const;
+        ComponentManager* getComponentManager() const;
 
         // Component events
         virtual void onCreate() {}
