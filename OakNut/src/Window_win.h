@@ -1,3 +1,4 @@
+#pragma once
 #if defined(WIN32)
 #include "IWindow.h"
 

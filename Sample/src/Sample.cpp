@@ -1,6 +1,11 @@
 #include "Sample.h"
 
-onut::IGame* onut::IGame::CreateGame()
+onut::Game* onut::Game::CreateGame()
 {
     return new Sample();
+}
+
+Sample::Sample()
+{
+    setName("Sample Game");
 }

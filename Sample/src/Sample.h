@@ -1,7 +1,8 @@
 #pragma once
-#include <IGame.h>
+#include <Game.h>
 
-class Sample : public onut::IGame
+class Sample : public onut::Game
 {
 public:
+    Sample();
 };

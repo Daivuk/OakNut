@@ -14,5 +14,8 @@ namespace onut
 
     protected:
         IWindow();
+
+    private:
+        COMPONENT_PROPERTY(std::string, WindowName, "Unnamed game");
     };
 }

@@ -2,7 +2,6 @@
 
 onut::Timing::Timing()
 {
-    setName("Timing");
 }
 
 void onut::Timing::onCreate()

@@ -1,4 +1,5 @@
 #if defined(WIN32)
+#include "StringUtils.h"
 #include "Window_win.h"
 
 onut::IWindow* onut::IWindow::createWindow()
@@ -76,22 +77,24 @@ void onut::Window_win::onCreate()
     wc.style = CS_OWNDC;
     wc.lpfnWndProc = WinProc;
     wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
-    wc.lpszClassName = L"OakNutWindow";
+    wc.lpszClassName = TEXT("OakNutWindow");
     RegisterClass(&wc);
 
     // Centered position
     auto screenW = GetSystemMetrics(SM_CXSCREEN);
     auto screenH = GetSystemMetrics(SM_CYSCREEN);
 
+    auto windowNameUTF16 = onut::utf8ToUtf16(getWindowName());
+
     if (isFullscreen)
     {
         long posX = 0;
         long posY = 0;
         m_handle = CreateWindow(TEXT("OakNutWindow"),
-                              TEXT("Game Name"),
-                              WS_POPUP | WS_VISIBLE,
-                              posX, posY, screenW, screenH,
-                              nullptr, nullptr, nullptr, nullptr);
+                                windowNameUTF16.c_str(),
+                                WS_POPUP | WS_VISIBLE,
+                                posX, posY, screenW, screenH,
+                                nullptr, nullptr, nullptr, nullptr);
     }
     else
     {
@@ -102,7 +105,7 @@ void onut::Window_win::onCreate()
         if (!isResizable)
         {
             m_handle = CreateWindow(TEXT("OakNutWindow"),
-                                    TEXT("Game Name"),
+                                    windowNameUTF16.c_str(),
                                     WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_VISIBLE,
                                     posX, posY, 1280, 720,
                                     nullptr, nullptr, nullptr, nullptr);
@@ -110,7 +113,7 @@ void onut::Window_win::onCreate()
         else
         {
             m_handle = CreateWindow(TEXT("OakNutWindow"),
-                                    TEXT("Game Name"),
+                                    windowNameUTF16.c_str(),
                                     WS_OVERLAPPEDWINDOW | WS_VISIBLE,
                                     posX, posY, 1280, 720,
                                     nullptr, nullptr, nullptr, nullptr);

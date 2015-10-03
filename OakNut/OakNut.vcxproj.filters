@@ -3,7 +3,6 @@
   <ItemGroup>
     <ClCompile Include="src\main_win.cpp" />
     <ClCompile Include="src\Main.cpp" />
-    <ClCompile Include="src\IGame.cpp" />
     <ClCompile Include="src\Object.cpp" />
     <ClCompile Include="src\Timing.cpp" />
     <ClCompile Include="src\Renderer_d3d11.cpp">
@@ -24,11 +23,15 @@
     <ClCompile Include="src\ComponentManager.cpp">
       <Filter>Component</Filter>
     </ClCompile>
+    <ClCompile Include="src\Entity.cpp">
+      <Filter>Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\StringUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Main.h" />
     <ClInclude Include="include\Object.h" />
-    <ClInclude Include="include\IGame.h" />
     <ClInclude Include="src\Timing.h" />
     <ClInclude Include="src\Renderer_d3d11.h">
       <Filter>Renderer</Filter>
@@ -48,6 +51,11 @@
     <ClInclude Include="include\ComponentManager.h">
       <Filter>Component</Filter>
     </ClInclude>
+    <ClInclude Include="include\Entity.h">
+      <Filter>Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game.h" />
+    <ClInclude Include="include\StringUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Renderer">
@@ -58,6 +66,9 @@
     </Filter>
     <Filter Include="Component">
       <UniqueIdentifier>{88b3a4f1-8195-438b-9005-b16fd956d6c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entity">
+      <UniqueIdentifier>{b36d3250-7e48-4a60-86dd-718ed1e59d8a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
