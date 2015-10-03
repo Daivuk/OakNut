@@ -1,5 +1,10 @@
 #include "Timing.h"
 
+onut::Timing::Timing()
+{
+    setName("Timing");
+}
+
 void onut::Timing::onCreate()
 {
     m_lastTime = std::chrono::high_resolution_clock::now();

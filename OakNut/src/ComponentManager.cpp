@@ -126,7 +126,7 @@ void onut::ComponentManager::onUpdate()
 {
     for (auto pComponent : m_components)
     {
-        if (pComponent->isEnabled() && pComponent->isCreated())
+        if (pComponent->getEnabled() && pComponent->isCreated())
         {
             pComponent->onUpdate();
         }
@@ -137,7 +137,7 @@ void onut::ComponentManager::onDraw()
 {
     for (auto pComponent : m_components)
     {
-        if (pComponent->isVisible() && pComponent->isCreated())
+        if (pComponent->getVisible() && pComponent->isCreated())
         {
             pComponent->onDraw();
         }

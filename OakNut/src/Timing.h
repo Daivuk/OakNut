@@ -8,6 +8,8 @@ namespace onut
     class Timing : public Component
     {
     public:
+        Timing();
+
         void onCreate() override;
         void onUpdate() override;
         void onDraw() override;

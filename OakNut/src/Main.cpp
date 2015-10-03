@@ -16,7 +16,7 @@ void onut::Main::main()
     pGame->addComponent(new onut::Timing());
     pGame->addComponent(IRenderer::createRenderer(pWindow));
 
-    while (pWindow->isEnabled())
+    while (pWindow->getEnabled())
     {
         pGame->onCreate(); // This will call newly created components if not already initialized
         pGame->onUpdate();
