@@ -1,24 +1,12 @@
 #pragma once
 #include "Object.h"
-
-#include <assert.h>
-#include <string>
-#include <unordered_map>
+#include "PropertyManager.h"
 
 namespace onut
 {
-#define COMPONENT_PROPERTY(__type__, __name__, __defaultValue__) \
-    private: \
-        __type__ m_ ## __name__ = __defaultValue__; \
-        bool m_ ## __name__ ## Registered = registerProperty(#__name__, &m_ ## __name__); \
-    public: \
-        const __type__& get ## __name__() const {return m_ ## __name__;} \
-        void set ## __name__(const __type__& value) \
-        { \
-            m_ ## __name__ = value; \
-        }
-
-    class Component : public Object
+    class Component : 
+        public PropertyManager, // It has serializable properties
+        public Object // It has ref counting
     {
     public:
         Component();
@@ -31,31 +19,14 @@ namespace onut
         virtual void onUpdate() {}
         virtual void onDraw() {}
 
-    protected:
-        template<typename Ttype> bool registerProperty(const std::string& name, Ttype* pVar);
-
     private:
         friend class ComponentManager;
 
+        // Common component properties
+        PROPERTY(bool, Enabled, true);
+        PROPERTY(bool, Visible, true);
+
         bool m_created = false;
         ComponentManager* m_pComponentManager = nullptr;
-
-        std::unordered_map<std::string, void*> m_properties;
-
-        // Common component properties
-        COMPONENT_PROPERTY(bool, Enabled, true);
-        COMPONENT_PROPERTY(bool, Visible, true);
     };
-
-    template<typename Ttype>
-    inline bool Component::registerProperty(const std::string& name, Ttype* pVar)
-    {
-        // Assert if dupilcated property.
-        // You added a property using COMPONENT_PROPERTY macro, but a
-        // property with that name already exist in this component.
-        assert(m_properties.find(name) == m_properties.end());
-
-        m_properties[name] = pVar;
-        return true;
-    }
 }

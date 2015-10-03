@@ -28,6 +28,9 @@
     </ClCompile>
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\StringUtils.cpp" />
+    <ClCompile Include="src\PropertyManager.cpp">
+      <Filter>Serialization</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Main.h" />
@@ -56,6 +59,9 @@
     </ClInclude>
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\StringUtils.h" />
+    <ClInclude Include="include\PropertyManager.h">
+      <Filter>Serialization</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Renderer">
@@ -69,6 +75,9 @@
     </Filter>
     <Filter Include="Entity">
       <UniqueIdentifier>{b36d3250-7e48-4a60-86dd-718ed1e59d8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Serialization">
+      <UniqueIdentifier>{1c3dd894-1ab8-4554-9068-c563a66a9ece}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

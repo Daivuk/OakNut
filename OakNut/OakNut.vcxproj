@@ -19,6 +19,7 @@
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\main_win.cpp" />
     <ClCompile Include="src\Object.cpp" />
+    <ClCompile Include="src\PropertyManager.cpp" />
     <ClCompile Include="src\Renderer_d3d11.cpp" />
     <ClCompile Include="src\StringUtils.cpp" />
     <ClCompile Include="src\Timing.cpp" />
@@ -31,6 +32,7 @@
     <ClInclude Include="include\Entity.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\Object.h" />
+    <ClInclude Include="include\PropertyManager.h" />
     <ClInclude Include="include\StringUtils.h" />
     <ClInclude Include="src\IRenderer.h" />
     <ClInclude Include="src\Main.h" />
