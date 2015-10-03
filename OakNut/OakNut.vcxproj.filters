@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\main_win.cpp" />
+    <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\IGame.cpp" />
+    <ClCompile Include="src\Object.cpp" />
+    <ClCompile Include="src\Timing.cpp" />
+    <ClCompile Include="src\Renderer_d3d11.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IRenderer.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Window_win.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IWindow.cpp">
+      <Filter>Window</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Component.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ComponentManager.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Main.h" />
+    <ClInclude Include="include\Object.h" />
+    <ClInclude Include="include\IGame.h" />
+    <ClInclude Include="src\Timing.h" />
+    <ClInclude Include="src\Renderer_d3d11.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IRenderer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Window_win.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IWindow.h">
+      <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Component.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ComponentManager.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Renderer">
+      <UniqueIdentifier>{e30e625d-a84b-4d64-b25c-d4995d829449}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Window">
+      <UniqueIdentifier>{0f32c768-38d9-4fd8-a8f0-2c8e4a439056}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component">
+      <UniqueIdentifier>{88b3a4f1-8195-438b-9005-b16fd956d6c1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
