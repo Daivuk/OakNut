@@ -10,7 +10,7 @@ namespace onut
 #define COMPONENT_PROPERTY(__type__, __name__, __defaultValue__) \
     private: \
         __type__ m_ ## __name__ = __defaultValue__; \
-        bool m_ ## __name__ ## Registered_ ## __LINE__ = registerProperty(#__name__, &m_ ## __name__); \
+        bool m_ ## __name__ ## Registered = registerProperty(#__name__, &m_ ## __name__); \
     public: \
         const __type__& get ## __name__() const {return m_ ## __name__;} \
         void set ## __name__(const __type__& value) \
