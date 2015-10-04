@@ -1,4 +1,10 @@
 #pragma once
+#include "json/json.h"
+
+#include <functional>
+#include <string>
+#include <unordered_map>
+
 namespace onut
 {
     class Object

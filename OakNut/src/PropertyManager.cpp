@@ -1,3 +1,6 @@
+#include "Component.h"
+#include "ComponentManager.h"
+#include "ObjectLibrary.h"
 #include "PropertyManager.h"
 
 #include <fstream>
@@ -114,11 +117,36 @@ bool onut::PropertyManager::loadPropertiesFromJson(const Json::Value& json)
                     }
                 }
                 break;
-            case ePropertyType::P_ENTITY:
-                // todo
-                break;
             case ePropertyType::P_ENTITY_ARRAY:
                 // todo
+                break;
+            case ePropertyType::P_COMPONENT_ARRAY:
+                if (jsonElement.isArray())
+                {
+                    auto pComponentManager = dynamic_cast<ComponentManager*>(this);
+                    if (pComponentManager)
+                    {
+                        auto pComponents = static_cast<std::vector<onut::Component*>*>(propertyLink.pProperty);
+                        for (auto &jsonComponent : jsonElement)
+                        {
+                            if (jsonComponent.isArray() &&
+                                jsonComponent.size() == 2 &&
+                                jsonComponent[0].isString() &&
+                                jsonComponent[1].isObject())
+                            {
+                                auto szComponentClassName = jsonComponent[0].asCString();
+                                auto pComponentObject = ObjectLibrary::createObject(szComponentClassName);
+                                if (!pComponentObject) continue;
+                                auto pComponent = dynamic_cast<onut::Component*>(pComponentObject);
+                                if (!pComponent) continue;
+                                pComponent->loadPropertiesFromJson(jsonComponent[1]);
+                                pComponent->retain();
+                                pComponentManager->addComponent(pComponent);
+                                pComponent->release();
+                            }
+                        }
+                    }
+                }
                 break;
         }
     }

@@ -17,6 +17,8 @@ namespace onut
         void onUpdate() override;
         void onDraw() override;
 
+        PROPERTY(std::string, StartupScene, "");
+
     private:
         SceneNode *m_pRoot = nullptr;
     };

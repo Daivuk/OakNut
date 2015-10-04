@@ -1,22 +1,10 @@
 #if defined(ONUT_RENDERER_D3D11)
+#include "ComponentManager.h"
 #include "Renderer_d3d11.h"
 #include "Window_win.h"
 
-onut::IRenderer* onut::IRenderer::createRenderer(IWindow* pWindow)
-{
-    return new Renderer_d3d11(pWindow);
-}
-
-onut::Renderer_d3d11::Renderer_d3d11(IWindow* pWindow)
-{
-    m_pWindow = dynamic_cast<Window_win*>(pWindow);
-    m_pWindow->retain();
-}
-
 onut::Renderer_d3d11::~Renderer_d3d11()
 {
-    m_pWindow->release();
-
     if (m_pRenderTargetView) m_pRenderTargetView->Release();
     if (m_pDeviceContext) m_pDeviceContext->Release();
     if (m_pDevice) m_pDevice->Release();
@@ -35,12 +23,17 @@ void onut::Renderer_d3d11::onDraw()
 
 void onut::Renderer_d3d11::createDevice()
 {
+    auto pComponentManager = getComponentManager();
+    if (!pComponentManager) return;
+    auto pWindow = pComponentManager->getComponent<Window_win>();
+    if (!pWindow) return;
+
     // Define our swap chain
     DXGI_SWAP_CHAIN_DESC swapChainDesc = {0};
     swapChainDesc.BufferCount = 1;
     swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    swapChainDesc.OutputWindow = m_pWindow->getHandle();
+    swapChainDesc.OutputWindow = pWindow->getHandle();
     swapChainDesc.SampleDesc.Count = 1;
     swapChainDesc.Windowed = TRUE;
 
@@ -64,6 +57,14 @@ void onut::Renderer_d3d11::createRenderTargets()
     m_pDevice->CreateRenderTargetView(pBackBuffer, nullptr, &m_pRenderTargetView);
     pBackBuffer->GetDesc(&m_backBufferDesc);
     pBackBuffer->Release();
+}
+
+void onut::Renderer_d3d11::setCamera(Camera* pCamera)
+{
+}
+
+void onut::Renderer_d3d11::draw(Mesh* pMesh, Material* pMaterial, const glm::mat4& transform)
+{
 }
 
 #endif

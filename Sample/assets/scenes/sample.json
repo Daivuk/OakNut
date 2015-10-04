@@ -1,11 +1,20 @@
 {
-    "Name": "SceneRoot",
-    "Components": [
-        [
-            "SceneNode",
-            {
-                "Position": [ 10, 0, 0 ]
-            }
+  "Name": "SceneRoot",
+  "Components": [
+    [
+      "SceneNode",
+      {
+        "Children": [
+          {
+            "Name": "Camera",
+            "Components": [ [ "SceneNode", { "Position": [ 0, -10, 0 ] } ] ]
+          },
+          {
+            "Name": "Cube",
+            "Components": [ [ "SceneNode", { } ], [ "MeshRenderer", { "Mesh": "meshes/meshCube", "Material": "materials/matRed.json" } ] ]
+          }
         ]
+      }
     ]
+  ]
 }

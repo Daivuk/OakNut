@@ -18,10 +18,9 @@ LRESULT CALLBACK WinProc(HWND handle, UINT msg, WPARAM wparam, LPARAM lparam)
     }
     else if (msg == WM_SIZE)
     {
-        //if (ORenderer)
-        //{
-        //    ORenderer->onResize();
-        //}
+        RECT clientRect;
+        GetClientRect(handle, &clientRect);
+        onut::Game::getGame()->getComponent<onut::IWindow>()->setResolution({clientRect.right - clientRect.left, clientRect.bottom - clientRect.top});
         return 0;
     }
     else if (msg == WM_SETCURSOR)
@@ -85,8 +84,8 @@ void onut::Window_win::onCreate()
     auto screenW = GetSystemMetrics(SM_CXSCREEN);
     auto screenH = GetSystemMetrics(SM_CYSCREEN);
 
-    auto windowNameUTF16 = onut::utf8ToUtf16(onut::Game::getGame()->getName());
-    auto resolution = onut::Game::getGame()->getResolution();
+    auto windowNameUTF16 = onut::utf8ToUtf16(getCaption());
+    auto resolution = getResolution();
 
     if (isFullscreen)
     {
@@ -121,6 +120,10 @@ void onut::Window_win::onCreate()
                                     nullptr, nullptr, nullptr, nullptr);
         }
     }
+
+    RECT clientRect;
+    GetClientRect(m_handle, &clientRect);
+    setResolution({clientRect.right - clientRect.left, clientRect.bottom - clientRect.top});
 }
 
 void onut::Window_win::onUpdate()

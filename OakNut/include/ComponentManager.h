@@ -1,11 +1,14 @@
 #pragma once
+#include "PropertyManager.h"
+
 #include <vector>
 
 namespace onut
 {
     class Component;
 
-    class ComponentManager
+    class ComponentManager :
+        public PropertyManager // It has serializable properties
     {
     public:
         ComponentManager();
@@ -31,11 +34,10 @@ namespace onut
 
         // Getters
         template<typename Tcomponent> Tcomponent* getComponent() const;
-        const std::vector<Component*> &getComponents() const;
         bool hasComponent(Component* pComponent);
 
     private:
-        std::vector<Component*> m_components;
+        PROPERTY(std::vector<Component*>, Components, std::vector<Component*>());
     };
 
     template<typename Tcomponent> 
@@ -57,12 +59,12 @@ namespace onut
     template<typename Tcomponent>
     inline bool ComponentManager::removeComponent()
     {
-        for (auto it = m_components.begin(); it != m_components.end(); ++it)
+        for (auto it = m_Components.begin(); it != m_Components.end(); ++it)
         {
             auto pTcomponent = dynamic_cast<Tcomponent*>(pComponent);
             if (pTcomponent)
             {
-                m_components.erase(it);
+                m_Components.erase(it);
                 pTcomponent->m_pComponentManager = nullptr;
                 pTcomponent->release();
                 return true;
@@ -74,7 +76,7 @@ namespace onut
     template<typename Tcomponent>
     inline Tcomponent* ComponentManager::getComponent() const
     {
-        for (auto pComponent : m_components)
+        for (auto pComponent : m_Components)
         {
             auto pTcomponent = dynamic_cast<Tcomponent*>(pComponent);
             if (pTcomponent)

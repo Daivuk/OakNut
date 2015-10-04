@@ -1,40 +1,53 @@
+#include "Camera.h"
+#include "ContentManager.h"
 #include "Dispatcher.h"
 #include "Game.h"
 #include "IRenderer.h"
 #include "IWindow.h"
 #include "Main.h"
+#include "MeshRenderer.h"
+#include "ObjectLibrary.h"
+#include "Renderer_d3d11.h"
 #include "SceneManager.h"
+#include "SceneNode.h"
 #include "Timing.h"
+#include "Window_win.h"
 
 void onut::Main::main()
 {
-    onut::Game::s_pGame = Game::CreateGame();
-    onut::Game::s_pWindow = IWindow::createWindow();
-    onut::Game::s_pDispatcher = new onut::Dispatcher();
-    onut::Game::s_pTiming = new onut::Timing();
-    onut::Game::s_pRenderer = IRenderer::createRenderer(onut::Game::s_pWindow);
-    onut::Game::s_pSceneManager = new onut::SceneManager();
+    // Register classes to be loaded dynamically
+    ObjectLibrary::registerObject<Camera>("Camera");
+    ObjectLibrary::registerObject<ContentManager>("ContentManager");
+    ObjectLibrary::registerObject<Dispatcher>("Dispatcher");
+    ObjectLibrary::registerObject<MeshRenderer>("MeshRenderer");
+    ObjectLibrary::registerObject<SceneManager>("SceneManager");
+    ObjectLibrary::registerObject<SceneNode>("SceneNode");
+    ObjectLibrary::registerObject<Timing>("Timing");
 
-    onut::Game::s_pGame->retain();
+    // Platform specifics
+#if defined(WIN32)
+    ObjectLibrary::registerObject<Window_win>("Window");
+#endif
+#if defined(ONUT_RENDERER_D3D11)
+    ObjectLibrary::registerObject<Renderer_d3d11>("Renderer");
+#endif
+
+    auto pGame = Game::CreateGame();
+    pGame->retain();
 
     // Load game properties from game.json
-    onut::Game::s_pGame->loadPropertiesFromFile("assets/game.json");
+    // This file is mendatory
+    pGame->loadPropertiesFromFile(pGame->getFilename());
 
-    // Add base components to it
-    onut::Game::s_pGame->addComponent(onut::Game::s_pWindow);
-    onut::Game::s_pGame->addComponent(onut::Game::s_pTiming);
-    onut::Game::s_pGame->addComponent(onut::Game::s_pDispatcher);
-    onut::Game::s_pGame->addComponent(onut::Game::s_pSceneManager);
-    onut::Game::s_pGame->addComponent(onut::Game::s_pRenderer);
-
-    onut::Game::s_pGame->onLoaded();
-
-    while (onut::Game::s_pWindow->getEnabled())
+    // Main loop
+    while (pGame->getComponent<IWindow>()->getEnabled())
     {
-        onut::Game::s_pGame->onUpdate();
-        onut::Game::s_pGame->onCreate(); // This will call newly created components if not already initialized
-        onut::Game::s_pGame->onDraw();
+        pGame->onUpdate();
+        pGame->onCreate(); // This will call newly created components if not already initialized
+        pGame->onDraw();
     }
 
-    onut::Game::s_pGame->release();
+    // Free up
+    pGame->release();
+    ObjectLibrary::clear();
 }

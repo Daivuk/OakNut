@@ -9,10 +9,4 @@ onut::Game* onut::Game::CreateGame()
 
 Sample::Sample()
 {
-    setName("Sample Game");
-}
-
-void Sample::onLoaded()
-{
-    onut::Game::getSceneManager()->loadScene("assets/scenes/sample.json");
 }

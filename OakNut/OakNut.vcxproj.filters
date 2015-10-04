@@ -56,6 +56,27 @@
     <ClCompile Include="src\json\json_value.cpp">
       <Filter>json</Filter>
     </ClCompile>
+    <ClCompile Include="src\MeshRenderer.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Camera.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Material.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mesh.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Resource.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ContentManager.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ObjectLibrary.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Main.h" />
@@ -105,6 +126,27 @@
     <ClInclude Include="include\SceneNode.h">
       <Filter>Scene</Filter>
     </ClInclude>
+    <ClInclude Include="include\MeshRenderer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Camera.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Material.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Mesh.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Resource.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ContentManager.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ObjectLibrary.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Renderer">
@@ -133,6 +175,9 @@
     </Filter>
     <Filter Include="json">
       <UniqueIdentifier>{cc13ee8d-9d49-4fee-92c0-54a50b90da29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{753348ed-60aa-4915-8ec2-afc8460b9c65}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

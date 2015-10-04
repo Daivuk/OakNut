@@ -9,5 +9,6 @@
   <ItemGroup>
     <None Include="assets\scenes\sample.json" />
     <None Include="assets\game.json" />
+    <None Include="assets\materials\matRed.json" />
   </ItemGroup>
 </Project>

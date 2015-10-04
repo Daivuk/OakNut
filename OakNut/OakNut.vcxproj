@@ -12,8 +12,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\glm\detail\glm.cpp" />
+    <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\ObjectLibrary.cpp" />
     <ClCompile Include="src\Component.cpp" />
     <ClCompile Include="src\ComponentManager.cpp" />
+    <ClCompile Include="src\ContentManager.cpp" />
     <ClCompile Include="src\Dispatcher.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Game.cpp" />
@@ -23,9 +26,13 @@
     <ClCompile Include="src\json\json_writer.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\main_win.cpp" />
+    <ClCompile Include="src\Material.cpp" />
+    <ClCompile Include="src\Mesh.cpp" />
+    <ClCompile Include="src\MeshRenderer.cpp" />
     <ClCompile Include="src\Object.cpp" />
     <ClCompile Include="src\PropertyManager.cpp" />
     <ClCompile Include="src\Renderer_d3d11.cpp" />
+    <ClCompile Include="src\Resource.cpp" />
     <ClCompile Include="src\SceneManager.cpp" />
     <ClCompile Include="src\StringUtils.cpp" />
     <ClCompile Include="src\Timing.cpp" />
@@ -34,13 +41,20 @@
     <ClCompile Include="src\Window_win.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Camera.h" />
+    <ClInclude Include="include\ObjectLibrary.h" />
     <ClInclude Include="include\Component.h" />
     <ClInclude Include="include\ComponentManager.h" />
+    <ClInclude Include="include\ContentManager.h" />
     <ClInclude Include="include\Dispatcher.h" />
     <ClInclude Include="include\Entity.h" />
     <ClInclude Include="include\Game.h" />
+    <ClInclude Include="include\Material.h" />
+    <ClInclude Include="include\Mesh.h" />
+    <ClInclude Include="include\MeshRenderer.h" />
     <ClInclude Include="include\Object.h" />
     <ClInclude Include="include\PropertyManager.h" />
+    <ClInclude Include="include\Resource.h" />
     <ClInclude Include="include\SceneManager.h" />
     <ClInclude Include="include\StringUtils.h" />
     <ClInclude Include="include\Synchronous.h" />
@@ -90,6 +104,8 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>ONUT_RENDERER_D3D11;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>include</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -109,6 +125,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>ONUT_RENDERER_D3D11;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>include</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

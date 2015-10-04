@@ -11,11 +11,13 @@ namespace onut
     class Renderer_d3d11 : public IRenderer
     {
     public:
-        Renderer_d3d11(IWindow* pWindow);
         virtual ~Renderer_d3d11();
 
         void onCreate() override;
         void onDraw() override;
+
+        void setCamera(Camera* pCamera) override;
+        void draw(Mesh* pMesh, Material* pMaterial, const glm::mat4& transform) override;
 
     private:
         void createDevice();
@@ -29,8 +31,6 @@ namespace onut
         // Render target
         ID3D11RenderTargetView* m_pRenderTargetView = nullptr;
         D3D11_TEXTURE2D_DESC m_backBufferDesc;
-
-        Window_win* m_pWindow = nullptr;
     };
 }
 

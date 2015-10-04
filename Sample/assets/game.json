@@ -1,4 +1,21 @@
 {
-    "Name": "Sample Game",
-    "Resolution": [ 1280, 720 ]
+  "Components": [
+    [
+      "Window",
+      {
+        "Resolution": [ 1280, 720 ],
+        "Caption": "Sample Game"
+      }
+    ],
+    [ "ContentManager", { } ],
+    [ "Timing", { } ],
+    [ "Dispatcher", { } ],
+    [
+      "SceneManager",
+      {
+        "StartupScene": "assets/scenes/sample.json"
+      }
+    ],
+    [ "Renderer", { } ]
+  ]
 }

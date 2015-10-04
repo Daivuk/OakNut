@@ -9,7 +9,7 @@ onut::ComponentManager::ComponentManager()
 
 onut::ComponentManager::~ComponentManager()
 {
-    for (auto pComponent : m_components)
+    for (auto pComponent : m_Components)
     {
         pComponent->m_pComponentManager = nullptr;
         pComponent->release();
@@ -21,7 +21,7 @@ bool onut::ComponentManager::addComponent(Component* pComponent)
     if (hasComponent(pComponent)) return false;
     pComponent->retain();
     pComponent->m_pComponentManager = this;
-    m_components.push_back(pComponent);
+    m_Components.push_back(pComponent);
     return true;
 }
 
@@ -30,21 +30,21 @@ bool onut::ComponentManager::insertComponentAtBeginning(Component* pComponent)
     if (hasComponent(pComponent)) return false;
     pComponent->retain();
     pComponent->m_pComponentManager = this;
-    m_components.insert(m_components.begin(), pComponent);
+    m_Components.insert(m_Components.begin(), pComponent);
     return true;
 }
 
 bool onut::ComponentManager::insertComponentBefore(Component* pBefore, Component* pComponent)
 {
     if (hasComponent(pComponent)) return false;
-    for (auto it = m_components.begin(); it != m_components.end(); ++it)
+    for (auto it = m_Components.begin(); it != m_Components.end(); ++it)
     {
         auto pComponentOther = *it;
         if (pComponentOther == pBefore)
         {
             pComponent->retain();
             pComponent->m_pComponentManager = this;
-            m_components.insert(it, pComponent);
+            m_Components.insert(it, pComponent);
             return true;
         }
     }
@@ -54,14 +54,14 @@ bool onut::ComponentManager::insertComponentBefore(Component* pBefore, Component
 bool onut::ComponentManager::insertComponentAfter(Component* pAfter, Component* pComponent)
 {
     if (hasComponent(pComponent)) return false;
-    for (auto it = m_components.begin(); it != m_components.end(); ++it)
+    for (auto it = m_Components.begin(); it != m_Components.end(); ++it)
     {
         auto pComponentOther = *it;
         if (pComponentOther == pAfter)
         {
             pComponent->retain();
             pComponent->m_pComponentManager = this;
-            m_components.insert(it + 1, pComponent);
+            m_Components.insert(it + 1, pComponent);
             return true;
         }
     }
@@ -70,12 +70,12 @@ bool onut::ComponentManager::insertComponentAfter(Component* pAfter, Component* 
 
 bool onut::ComponentManager::removeComponent(Component* pComponent)
 {
-    for (auto it = m_components.begin(); it != m_components.end(); ++it)
+    for (auto it = m_Components.begin(); it != m_Components.end(); ++it)
     {
         auto pComponentOther = *it;
         if (pComponentOther == pComponent)
         {
-            m_components.erase(it);
+            m_Components.erase(it);
             pComponent->m_pComponentManager = nullptr;
             pComponent->release();
             return true;
@@ -86,33 +86,28 @@ bool onut::ComponentManager::removeComponent(Component* pComponent)
 
 bool onut::ComponentManager::removeAllComponents()
 {
-    bool bRemoved = !m_components.empty();
-    for (auto pComponent : m_components)
+    bool bRemoved = !m_Components.empty();
+    for (auto pComponent : m_Components)
     {
         pComponent->m_pComponentManager = nullptr;
         pComponent->release();
     }
-    m_components.clear();
+    m_Components.clear();
     return bRemoved;
 }
 
 bool onut::ComponentManager::hasComponent(Component* pComponent)
 {
-    for (auto pComponentOther : m_components)
+    for (auto pComponentOther : m_Components)
     {
         if (typeid(*pComponentOther) == typeid(*pComponent)) return true;
     }
     return false;
 }
 
-const std::vector<onut::Component*> &onut::ComponentManager::getComponents() const
-{
-    return m_components;
-}
-
 void onut::ComponentManager::onCreate()
 {
-    for (auto pComponent : m_components)
+    for (auto pComponent : m_Components)
     {
         if (!pComponent->isCreated())
         {
@@ -124,7 +119,7 @@ void onut::ComponentManager::onCreate()
 
 void onut::ComponentManager::onUpdate()
 {
-    for (auto pComponent : m_components)
+    for (auto pComponent : m_Components)
     {
         if (pComponent->getEnabled() && pComponent->isCreated())
         {
@@ -135,7 +130,7 @@ void onut::ComponentManager::onUpdate()
 
 void onut::ComponentManager::onDraw()
 {
-    for (auto pComponent : m_components)
+    for (auto pComponent : m_Components)
     {
         if (pComponent->getVisible() && pComponent->isCreated())
         {

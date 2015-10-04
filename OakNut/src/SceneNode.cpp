@@ -7,24 +7,6 @@ onut::Entity* onut::SceneNode::getEntity() const
     return dynamic_cast<onut::Entity*>(getComponentManager());
 }
 
-void onut::SceneNode::setPosition(const glm::vec3& position)
-{
-    m_Position = position;
-    m_isDirty = true;
-}
-
-void onut::SceneNode::setRotation(const glm::vec3& rotation)
-{
-    m_Rotation = rotation;
-    m_isDirty = true;
-}
-
-void onut::SceneNode::setScale(const glm::vec3& scale)
-{
-    m_Scale = scale;
-    m_isDirty = true;
-}
-
 const glm::mat4& onut::SceneNode::getLocalMatrix() const
 {
     return 
