@@ -44,6 +44,12 @@ namespace onut
             if (m_p ## __name__) m_p ## __name__->release(); \
             m_p ## __name__ = pValue; \
         }
+#define PROPERTY_NOSETTER(__type__, __name__, __defaultValue__) \
+    private: \
+        __type__ m_ ## __name__ = __defaultValue__; \
+        bool m_ ## __name__ ## IsDefault = registerProperty(#__name__, &m_ ## __name__); \
+    public: \
+        const __type__& get ## __name__() const {return m_ ## __name__;}
 
     class Component;
     class Entity;

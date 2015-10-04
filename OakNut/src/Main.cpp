@@ -23,8 +23,6 @@ void onut::Main::main()
     ObjectLibrary::registerObject<SceneManager>("SceneManager");
     ObjectLibrary::registerObject<SceneNode>("SceneNode");
     ObjectLibrary::registerObject<Timing>("Timing");
-
-    // Platform specifics
 #if defined(WIN32)
     ObjectLibrary::registerObject<Window_win>("Window");
 #endif

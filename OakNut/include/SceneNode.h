@@ -15,6 +15,7 @@ namespace onut
         const glm::mat4& getWorldMatrix();
 
         Entity* getEntity() const;
+        bool isCreated() const;
 
         bool add(Entity* pEntity);
         bool remove(Entity* pEntity);
@@ -27,7 +28,7 @@ namespace onut
         PROPERTY_DIRTY(glm::vec3, Position, glm::vec3(0, 0, 0), m_isDirty);
         PROPERTY_DIRTY(glm::vec3, Rotation, glm::vec3(0, 0, 0), m_isDirty);
         PROPERTY_DIRTY(glm::vec3, Scale, glm::vec3(1, 1, 1), m_isDirty);
-        PROPERTY(std::vector<Entity*>, Children, std::vector<Entity*>());
+        PROPERTY_NOSETTER(std::vector<Entity*>, Children, std::vector<Entity*>());
 
     private:
         glm::mat4 m_worldMatrix;

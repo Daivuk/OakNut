@@ -2,6 +2,11 @@
 #include "SceneNode.h"
 #include "glm/gtx/transform.hpp"
 
+bool onut::SceneNode::isCreated() const
+{
+    return false;
+}
+
 onut::Entity* onut::SceneNode::getEntity() const
 {
     return dynamic_cast<onut::Entity*>(getComponentManager());

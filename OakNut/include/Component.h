@@ -14,7 +14,7 @@ namespace onut
         Component();
         virtual ~Component();
 
-        bool isCreated() const;
+        virtual bool isCreated() const;
         ComponentManager* getComponentManager() const;
 
         // Component events

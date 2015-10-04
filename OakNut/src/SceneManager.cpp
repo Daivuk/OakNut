@@ -19,17 +19,17 @@ onut::SceneManager::~SceneManager()
 void onut::SceneManager::onCreate()
 {
     m_pRoot->onCreate();
-}
-
-void onut::SceneManager::onUpdate()
-{
-    m_pRoot->onUpdate();
 
     // Load the default scene
     if (!getStartupScene().empty())
     {
         loadScene(getStartupScene());
     }
+}
+
+void onut::SceneManager::onUpdate()
+{
+    m_pRoot->onUpdate();
 }
 
 void onut::SceneManager::onDraw()
@@ -42,22 +42,18 @@ void onut::SceneManager::loadScene(const std::string& filename)
     auto pDispatcher = onut::Game::getGame()->getComponent<Dispatcher>();
     m_pRoot->retain();
     pDispatcher->retain();
-    std::async(std::launch::async, [=](decltype(m_pRoot) pRoot)
+    std::async(std::launch::async, [=]()
     {
         auto pScene = new onut::Entity();
-        auto pSceneNode = new onut::SceneNode();
-        pScene->addComponent(pSceneNode);
         pScene->retain();
-        pSceneNode->retain();
         pScene->loadPropertiesFromFile(filename);
         pDispatcher->dispatch([=]
         {
-            pRoot->add(pScene);
+            m_pRoot->add(pScene);
 
-            pSceneNode->release();
             pScene->release();
-            pRoot->release();
+            m_pRoot->release();
             pDispatcher->release();
         });
-    }, m_pRoot);
+    });
 }
