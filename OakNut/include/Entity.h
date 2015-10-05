@@ -21,9 +21,9 @@ namespace onut
         bool add(Entity* pEntity);
         bool remove(Entity* pEntity);
 
-        void onCreate();
-        void onUpdate();
-        void onDraw();
+        void onCreate() override;
+        void onUpdate() override;
+        void onDraw() override;
 
     private:
         PROPERTY_DIRTY(glm::vec3, Position, glm::vec3(0, 0, 0), m_isMatrixDirty);

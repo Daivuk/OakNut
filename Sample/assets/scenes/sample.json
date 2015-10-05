@@ -3,7 +3,15 @@
   "Children": [
     {
       "Name": "Camera",
-      "Position": [ 0, -10, 0 ]
+      "Position": [ 0, -10, 0 ],
+      "Components": [
+        [
+          "Camera",
+          {
+            "Active": true
+          }
+        ]
+      ]
     },
     {
       "Name": "Cube",

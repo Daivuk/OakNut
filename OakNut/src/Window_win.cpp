@@ -123,7 +123,7 @@ void onut::Window_win::onCreate()
 
     RECT clientRect;
     GetClientRect(m_handle, &clientRect);
-    setResolution({clientRect.right - clientRect.left, clientRect.bottom - clientRect.top});
+    m_realResolution = {clientRect.right - clientRect.left, clientRect.bottom - clientRect.top};
 }
 
 void onut::Window_win::onUpdate()

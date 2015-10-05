@@ -1,4 +1,5 @@
 #if defined(ONUT_RENDERER_D3D11)
+#include "Camera.h"
 #include "ComponentManager.h"
 #include "Renderer_d3d11.h"
 #include "Window_win.h"
@@ -61,6 +62,8 @@ void onut::Renderer_d3d11::createRenderTargets()
 
 void onut::Renderer_d3d11::setCamera(Camera* pCamera)
 {
+    if (!pCamera) return;
+    auto viewProj = pCamera->getViewProj();
 }
 
 void onut::Renderer_d3d11::draw(Mesh* pMesh, Material* pMaterial, const glm::mat4& transform)

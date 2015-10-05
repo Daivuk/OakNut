@@ -6,9 +6,12 @@ namespace onut
     class Camera : public Component
     {
     public:
+        void onUpdate() override;
+
         glm::mat4 getViewProj() const;
 
     private:
+        PROPERTY(bool, Active, false);
         PROPERTY(bool, Orthographic, false);
         PROPERTY(float, Fov, 70.f);
         PROPERTY(float, Near, 0.1f);
