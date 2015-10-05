@@ -3,7 +3,6 @@
 #include "Entity.h"
 #include "ObjectLibrary.h"
 #include "PropertyManager.h"
-#include "SceneNode.h"
 
 #include <fstream>
 
@@ -122,19 +121,23 @@ bool onut::PropertyManager::loadPropertiesFromJson(const Json::Value& json)
             case ePropertyType::P_ENTITY_ARRAY:
                 if (jsonElement.isArray())
                 {
-                    auto pSceneNode = dynamic_cast<SceneNode*>(this);
+                    auto pMyEntity = dynamic_cast<Entity*>(this);
                     auto pEntities = static_cast<std::vector<onut::Entity*>*>(propertyLink.pProperty);
                     for (auto &jsonEntity : jsonElement)
                     {
                         if (jsonEntity.isObject())
                         {
-                            if (pSceneNode)
+                            if (pMyEntity)
                             {
                                 auto pEntity = new onut::Entity();
                                 pEntity->retain();
                                 pEntity->loadPropertiesFromJson(jsonEntity);
-                                pSceneNode->add(pEntity);
+                                pMyEntity->add(pEntity);
                                 pEntity->release();
+                            }
+                            else
+                            {
+                                assert(false); // TODO
                             }
                         }
                     }

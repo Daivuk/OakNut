@@ -15,9 +15,9 @@ namespace onut
         virtual ~ComponentManager();
 
         // Component events
-        void onCreate();
-        void onUpdate();
-        void onDraw();
+        virtual void onCreate();
+        virtual void onUpdate();
+        virtual void onDraw();
 
         // Insertion of components
         bool addComponent(Component* pComponent);

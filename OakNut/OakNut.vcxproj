@@ -37,7 +37,6 @@
     <ClCompile Include="src\StringUtils.cpp" />
     <ClCompile Include="src\Timing.cpp" />
     <ClCompile Include="src\IWindow.cpp" />
-    <ClCompile Include="src\SceneNode.cpp" />
     <ClCompile Include="src\Window_win.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -58,7 +57,6 @@
     <ClInclude Include="include\SceneManager.h" />
     <ClInclude Include="include\StringUtils.h" />
     <ClInclude Include="include\Synchronous.h" />
-    <ClInclude Include="include\SceneNode.h" />
     <ClInclude Include="src\IRenderer.h" />
     <ClInclude Include="src\Main.h" />
     <ClInclude Include="src\Renderer_d3d11.h" />

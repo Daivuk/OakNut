@@ -1,13 +1,13 @@
+#include "Entity.h"
 #include "Game.h"
 #include "IRenderer.h"
 #include "MeshRenderer.h"
-#include "SceneNode.h"
 
 void onut::MeshRenderer::onDraw()
 {
     if (!getMesh() || !getMaterial() || !getComponentManager()) return;
-    auto pSceneNode = getComponentManager()->getComponent<SceneNode>();
-    if (!pSceneNode) return;
+    auto pEntity = dynamic_cast<Entity*>(getComponentManager());
+    if (!pEntity) return;
 
-    Game::getGame()->getComponent<IRenderer>()->draw(getMesh(), getMaterial(), pSceneNode->getWorldMatrix());
+    Game::getGame()->getComponent<IRenderer>()->draw(getMesh(), getMaterial(), pEntity->getWorldMatrix());
 }

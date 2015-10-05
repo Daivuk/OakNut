@@ -1,25 +1,23 @@
 #include "Dispatcher.h"
+#include "Entity.h"
 #include "Game.h"
 #include "SceneManager.h"
-#include "SceneNode.h"
 
 #include <future>
 
 onut::SceneManager::SceneManager()
 {
-    m_pRoot = new onut::SceneNode();
-    m_pRoot->retain();
+    m_pRootEntity = new onut::Entity();
+    m_pRootEntity->retain();
 }
 
 onut::SceneManager::~SceneManager()
 {
-    m_pRoot->release();
+    m_pRootEntity->release();
 }
 
 void onut::SceneManager::onCreate()
 {
-    m_pRoot->onCreate();
-
     // Load the default scene
     if (!getStartupScene().empty())
     {
@@ -29,18 +27,19 @@ void onut::SceneManager::onCreate()
 
 void onut::SceneManager::onUpdate()
 {
-    m_pRoot->onUpdate();
+    m_pRootEntity->onCreate();
+    m_pRootEntity->onUpdate();
 }
 
 void onut::SceneManager::onDraw()
 {
-    m_pRoot->onDraw();
+    m_pRootEntity->onDraw();
 }
 
 void onut::SceneManager::loadScene(const std::string& filename)
 {
     auto pDispatcher = onut::Game::getGame()->getComponent<Dispatcher>();
-    m_pRoot->retain();
+    m_pRootEntity->retain();
     pDispatcher->retain();
     std::async(std::launch::async, [=]()
     {
@@ -49,10 +48,10 @@ void onut::SceneManager::loadScene(const std::string& filename)
         pScene->loadPropertiesFromFile(filename);
         pDispatcher->dispatch([=]
         {
-            m_pRoot->add(pScene);
+            m_pRootEntity->add(pScene);
 
             pScene->release();
-            m_pRoot->release();
+            m_pRootEntity->release();
             pDispatcher->release();
         });
     });

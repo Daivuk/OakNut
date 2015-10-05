@@ -9,7 +9,6 @@
 #include "ObjectLibrary.h"
 #include "Renderer_d3d11.h"
 #include "SceneManager.h"
-#include "SceneNode.h"
 #include "Timing.h"
 #include "Window_win.h"
 
@@ -21,7 +20,6 @@ void onut::Main::main()
     ObjectLibrary::registerObject<Dispatcher>("Dispatcher");
     ObjectLibrary::registerObject<MeshRenderer>("MeshRenderer");
     ObjectLibrary::registerObject<SceneManager>("SceneManager");
-    ObjectLibrary::registerObject<SceneNode>("SceneNode");
     ObjectLibrary::registerObject<Timing>("Timing");
 #if defined(WIN32)
     ObjectLibrary::registerObject<Window_win>("Window");

@@ -1,18 +1,18 @@
 #include "Camera.h"
+#include "Entity.h"
 #include "Game.h"
 #include "IRenderer.h"
 #include "MeshRenderer.h"
-#include "SceneNode.h"
 
 glm::mat4 onut::Camera::getViewProj() const
 {
     glm::mat4 ret(1);
 
     if (!getComponentManager()) return ret;
-    auto pSceneNode = getComponentManager()->getComponent<SceneNode>();
-    if (!pSceneNode) return ret;
+    auto pEntity = dynamic_cast<Entity*>(getComponentManager());
+    if (!pEntity) return ret;
 
-    const glm::mat4& world = pSceneNode->getWorldMatrix();
+    const glm::mat4& world = pEntity->getWorldMatrix();
 
     return std::move(ret);
 }

@@ -43,9 +43,6 @@
     <ClCompile Include="src\Object.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="src\SceneNode.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
     <ClCompile Include="include\glm\detail\glm.cpp" />
     <ClCompile Include="src\json\json_writer.cpp">
       <Filter>json</Filter>
@@ -122,9 +119,6 @@
     </ClInclude>
     <ClInclude Include="include\Object.h">
       <Filter>Utilities</Filter>
-    </ClInclude>
-    <ClInclude Include="include\SceneNode.h">
-      <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="include\MeshRenderer.h">
       <Filter>Renderer</Filter>

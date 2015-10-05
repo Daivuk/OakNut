@@ -3,7 +3,7 @@
 
 namespace onut
 {
-    class SceneNode;
+    class Entity;
 
     class SceneManager : public Component
     {
@@ -20,6 +20,6 @@ namespace onut
         PROPERTY(std::string, StartupScene, "");
 
     private:
-        SceneNode *m_pRoot = nullptr;
+        Entity *m_pRootEntity = nullptr;
     };
 }

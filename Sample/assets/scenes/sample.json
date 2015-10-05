@@ -1,20 +1,21 @@
 {
   "Name": "SceneRoot",
-  "Components": [
-    [
-      "SceneNode",
-      {
-        "Children": [
+  "Children": [
+    {
+      "Name": "Camera",
+      "Position": [ 0, -10, 0 ]
+    },
+    {
+      "Name": "Cube",
+      "Components": [
+        [
+          "MeshRenderer",
           {
-            "Name": "Camera",
-            "Components": [ [ "SceneNode", { "Position": [ 0, -10, 0 ] } ] ]
-          },
-          {
-            "Name": "Cube",
-            "Components": [ [ "SceneNode", { } ], [ "MeshRenderer", { "Mesh": "meshes/meshCube", "Material": "materials/matRed.json" } ] ]
+            "Mesh": "meshes/meshCube",
+            "Material": "materials/matRed.json"
           }
         ]
-      }
-    ]
+      ]
+    }
   ]
 }
