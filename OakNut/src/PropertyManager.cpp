@@ -1,6 +1,10 @@
 #include "Component.h"
 #include "ComponentManager.h"
+#include "ContentManager.h"
 #include "Entity.h"
+#include "Game.h"
+#include "Material.h"
+#include "Mesh.h"
 #include "ObjectLibrary.h"
 #include "PropertyManager.h"
 
@@ -175,6 +179,34 @@ bool onut::PropertyManager::loadPropertiesFromJson(const Json::Value& json)
                     }
                 }
                 break;
+            case ePropertyType::P_MATERIAL:
+                break;
+            case ePropertyType::P_MESH:
+                if (jsonElement.isString())
+                {
+                    auto ppMesh = static_cast<onut::Mesh**>(propertyLink.pProperty);
+                    auto pContentManager = Game::getGame()->getComponent<ContentManager>();
+                    if (ppMesh && pContentManager)
+                    {
+                        auto szFilename = jsonElement.asString();
+                        auto pMesh = pContentManager->getResource<onut::Mesh>(szFilename);
+                        if (!pMesh)
+                        {
+                            pMesh = onut::Mesh::create();
+                            if (!pMesh->load(szFilename))
+                            {
+                                pMesh->release();
+                                break;
+                            }
+                            pContentManager->addResource(szFilename, pMesh);
+                        }
+                        pMesh->retain();
+                        *ppMesh = pMesh;
+                    }
+                }
+                break;
+            default:
+                assert(false);
         }
     }
 

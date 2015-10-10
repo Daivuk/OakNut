@@ -19,7 +19,7 @@ namespace onut
             m_ ## __name__ ## IsDefault = value == __defaultValue__; \
             m_ ## __name__ = value; \
         }
-#define PROPERTY_DIRTY(__type__, __name__, __defaultValue__, __dirtyFlag__) \
+#define PROPERTY_DIRTY(__type__, __name__, __defaultValue__, __dirtyFunc__) \
     private: \
         __type__ m_ ## __name__ = __defaultValue__; \
         bool m_ ## __name__ ## IsDefault = registerProperty(#__name__, &m_ ## __name__); \
@@ -29,12 +29,12 @@ namespace onut
         { \
             m_ ## __name__ ## IsDefault = value == __defaultValue__; \
             m_ ## __name__ = value; \
-            __dirtyFlag__ = true; \
+            __dirtyFunc__(this); \
         }
 #define PROPERTY_OBJECT(__type__, __name__, __defaultValue__) \
     private: \
         __type__* m_p ## __name__ = __defaultValue__; \
-        bool m_ ## __name__ ## IsDefault = registerProperty(#__name__, (onut::Object**)(&m_p ## __name__)); \
+        bool m_ ## __name__ ## IsDefault = registerProperty(#__name__, &m_p ## __name__); \
     public: \
         __type__* get ## __name__() const {return m_p ## __name__;} \
         void set ## __name__(__type__* pValue) \
@@ -53,6 +53,8 @@ namespace onut
 
     class Component;
     class Entity;
+    class Material;
+    class Mesh;
     class Object;
 
     class PropertyManager
@@ -81,7 +83,9 @@ namespace onut
             P_ENTITY,
             P_ENTITY_ARRAY,
             P_COMPONENT_ARRAY,
-            P_OBJECT,
+            P_MATERIAL,
+            P_MESH,
+            P_TEXTURE,
         };
         struct SPropertyLink
         {
@@ -99,7 +103,8 @@ namespace onut
         static SPropertyLink make_property(Entity **pVar) { return{ePropertyType::P_ENTITY, pVar}; }
         static SPropertyLink make_property(std::vector<Entity*> *pVar) { return{ePropertyType::P_ENTITY_ARRAY, pVar}; }
         static SPropertyLink make_property(std::vector<Component*> *pVar) { return{ePropertyType::P_COMPONENT_ARRAY, pVar}; }
-        static SPropertyLink make_property(Object **pVar) { return{ePropertyType::P_OBJECT, (void*)pVar}; }
+        static SPropertyLink make_property(Material **pVar) { return{ePropertyType::P_MATERIAL, (void*)pVar}; }
+        static SPropertyLink make_property(Mesh **pVar) { return{ePropertyType::P_MESH, (void*)pVar}; }
         std::unordered_map<std::string, SPropertyLink> m_properties;
     };
 

@@ -19,8 +19,8 @@
         [
           "MeshRenderer",
           {
-            "Mesh": "meshes/meshCube",
-            "Material": "materials/matRed.json"
+            "Mesh": "meshes/cube.mesh",
+            "Material": "materials/red.material"
           }
         ]
       ]

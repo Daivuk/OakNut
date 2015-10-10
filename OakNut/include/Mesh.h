@@ -6,6 +6,12 @@ namespace onut
     class Mesh : public Resource
     {
     public:
-    private:
+        static Mesh* create();
+
+        bool load(const std::string& filename);
+
+    protected:
+        Mesh() {}
+        virtual ~Mesh() {}
     };
 }

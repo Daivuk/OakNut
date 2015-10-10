@@ -80,6 +80,9 @@
     <ClCompile Include="src\Window.cpp">
       <Filter>Window</Filter>
     </ClCompile>
+    <ClCompile Include="src\Mesh_d3d11.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Main.h" />
@@ -152,6 +155,9 @@
     </ClInclude>
     <ClInclude Include="src\Window.h">
       <Filter>Window</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mesh_d3d11.h">
+      <Filter>Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

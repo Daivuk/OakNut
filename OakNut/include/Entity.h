@@ -26,14 +26,16 @@ namespace onut
     private:
         PROPERTY(bool, Enabled, true);
         PROPERTY(bool, Visible, true);
-        PROPERTY_DIRTY(glm::vec3, Position, glm::vec3(0, 0, 0), m_isMatrixDirty);
-        PROPERTY_DIRTY(glm::vec3, Rotation, glm::vec3(0, 0, 0), m_isMatrixDirty);
-        PROPERTY_DIRTY(glm::vec3, Scale, glm::vec3(1, 1, 1), m_isMatrixDirty);
+        PROPERTY_DIRTY(glm::vec3, Position, glm::vec3(0, 0, 0), setMatrixDirty);
+        PROPERTY_DIRTY(glm::vec3, Rotation, glm::vec3(0, 0, 0), setMatrixDirty);
+        PROPERTY_DIRTY(glm::vec3, Scale, glm::vec3(1, 1, 1), setMatrixDirty);
         PROPERTY_NOSETTER(std::vector<Entity*>, Children, std::vector<Entity*>());
         PROPERTY(std::string, Name, "Entity");
         PROPERTY(bool, Persist, false);
 
     private:
+        static void setMatrixDirty(Entity* pEntity);
+
         glm::mat4 m_worldMatrix;
         bool m_isMatrixDirty = true;
         Entity* m_pParent = nullptr;

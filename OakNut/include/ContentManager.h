@@ -21,7 +21,7 @@ namespace onut
         {
             auto it = m_resources.find(name);
             if (it == m_resources.end()) return nullptr;
-            return dynamic_cast<Ttype>(it->second.pResource);
+            return dynamic_cast<Ttype*>(it->second.pResource);
         }
 
     private:

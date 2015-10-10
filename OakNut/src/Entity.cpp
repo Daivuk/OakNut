@@ -62,3 +62,12 @@ bool onut::Entity::remove(Entity* pEntity)
     }
     return false;
 }
+
+void onut::Entity::setMatrixDirty(Entity* pEntity)
+{
+    pEntity->m_isMatrixDirty = true;
+    for (auto it = pEntity->m_Children.begin(); it != pEntity->m_Children.end(); ++it)
+    {
+        setMatrixDirty(*it);
+    }
+}
