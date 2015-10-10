@@ -1,6 +1,7 @@
 #include "Camera.h"
 #include "ContentManager.h"
 #include "Dispatcher.h"
+#include "EntityFactory.h"
 #include "Game.h"
 #include "IRenderer.h"
 #include "IWindow.h"
@@ -44,6 +45,7 @@ void onut::Main::main()
     }
 
     // Free up
+    EntityFactory::clear();
     pGame->release();
     ObjectLibrary::clear();
 }

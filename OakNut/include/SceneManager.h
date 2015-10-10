@@ -12,6 +12,7 @@ namespace onut
         virtual ~SceneManager();
 
         void loadScene(const std::string& filename);
+        void loadSceneAsync(const std::string& filename);
 
         void onCreate() override;
         void onUpdate() override;
@@ -20,6 +21,11 @@ namespace onut
         PROPERTY(std::string, StartupScene, "");
 
     private:
+        void createEntity(Entity* pEntity);
+        void updateEntity(Entity* pEntity);
+        void drawEntity(Entity* pEntity);
+        void removeNonPersist(Entity* pEntity);
+
         Entity *m_pRootEntity = nullptr;
     };
 }

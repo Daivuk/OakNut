@@ -10,6 +10,8 @@ namespace onut
         public onut::Object // It has ref counting
     {
     public:
+        Entity() {}
+        Entity(const Entity& other);
         virtual ~Entity();
 
         const glm::mat4& getLocalMatrix() const;
@@ -21,16 +23,15 @@ namespace onut
         bool add(Entity* pEntity);
         bool remove(Entity* pEntity);
 
-        void onCreate() override;
-        void onUpdate() override;
-        void onDraw() override;
-
     private:
+        PROPERTY(bool, Enabled, true);
+        PROPERTY(bool, Visible, true);
         PROPERTY_DIRTY(glm::vec3, Position, glm::vec3(0, 0, 0), m_isMatrixDirty);
         PROPERTY_DIRTY(glm::vec3, Rotation, glm::vec3(0, 0, 0), m_isMatrixDirty);
         PROPERTY_DIRTY(glm::vec3, Scale, glm::vec3(1, 1, 1), m_isMatrixDirty);
         PROPERTY_NOSETTER(std::vector<Entity*>, Children, std::vector<Entity*>());
         PROPERTY(std::string, Name, "Entity");
+        PROPERTY(bool, Persist, false);
 
     private:
         glm::mat4 m_worldMatrix;

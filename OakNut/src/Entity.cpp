@@ -5,6 +5,10 @@ onut::Entity::~Entity()
 {
 }
 
+onut::Entity::Entity(const Entity& other)
+{
+}
+
 onut::Entity* onut::Entity::getParent() const
 {
     return m_pParent;
@@ -57,31 +61,4 @@ bool onut::Entity::remove(Entity* pEntity)
         }
     }
     return false;
-}
-
-void onut::Entity::onCreate()
-{
-    onut::ComponentManager::onCreate();
-    for (auto pChild : getChildren())
-    {
-        pChild->onCreate();
-    }
-}
-
-void onut::Entity::onUpdate()
-{
-    onut::ComponentManager::onUpdate();
-    for (auto pChild : getChildren())
-    {
-        pChild->onUpdate();
-    }
-}
-
-void onut::Entity::onDraw()
-{
-    onut::ComponentManager::onDraw();
-    for (auto pChild : getChildren())
-    {
-        pChild->onDraw();
-    }
 }

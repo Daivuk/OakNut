@@ -27,16 +27,71 @@ void onut::SceneManager::onCreate()
 
 void onut::SceneManager::onUpdate()
 {
-    m_pRootEntity->onCreate();
-    m_pRootEntity->onUpdate();
+    createEntity(m_pRootEntity);
+    updateEntity(m_pRootEntity);
+}
+
+void onut::SceneManager::createEntity(Entity* pEntity)
+{
+    pEntity->onCreate();
+    for (auto pChild : pEntity->getChildren())
+    {
+        createEntity(pChild);
+    }
+}
+
+void onut::SceneManager::updateEntity(Entity* pEntity)
+{
+    pEntity->onUpdate();
+    for (auto pChild : pEntity->getChildren())
+    {
+        if (pChild->getEnabled() &&
+            pChild->getVisible())
+        {
+            updateEntity(pChild);
+        }
+    }
 }
 
 void onut::SceneManager::onDraw()
 {
-    m_pRootEntity->onDraw();
+    drawEntity(m_pRootEntity);
+}
+
+void onut::SceneManager::drawEntity(Entity* pEntity)
+{
+    pEntity->onDraw();
+    for (auto pChild : pEntity->getChildren())
+    {
+        if (pChild->getVisible())
+        {
+            drawEntity(pChild);
+        }
+    }
+}
+
+void onut::SceneManager::removeNonPersist(Entity* pEntity)
+{
+    //auto children = pEntity->getChildren();
+    //for (auto pChild : children)
+    //{
+    //    if (!pChild->getPersist())
+    //    {
+    //        Entity::destroy(
+    //    }
+    //}
 }
 
 void onut::SceneManager::loadScene(const std::string& filename)
+{
+    auto pScene = new onut::Entity();
+    pScene->retain();
+    pScene->loadPropertiesFromFile(filename);
+    removeNonPersist(m_pRootEntity);
+    m_pRootEntity->add(pScene);
+}
+
+void onut::SceneManager::loadSceneAsync(const std::string& filename)
 {
     auto pDispatcher = onut::Game::getGame()->getComponent<Dispatcher>();
     m_pRootEntity->retain();
@@ -48,6 +103,7 @@ void onut::SceneManager::loadScene(const std::string& filename)
         pScene->loadPropertiesFromFile(filename);
         pDispatcher->dispatch([=]
         {
+            removeNonPersist(m_pRootEntity);
             m_pRootEntity->add(pScene);
 
             pScene->release();

@@ -74,6 +74,9 @@
     <ClCompile Include="src\ObjectLibrary.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="src\EntityFactory.cpp">
+      <Filter>Entity</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Main.h" />
@@ -140,6 +143,9 @@
     </ClInclude>
     <ClInclude Include="include\ObjectLibrary.h">
       <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EntityFactory.h">
+      <Filter>Entity</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
