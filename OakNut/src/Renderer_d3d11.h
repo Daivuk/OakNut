@@ -1,6 +1,6 @@
 #pragma once
 #if defined(ONUT_RENDERER_D3D11)
-#include "IRenderer.h"
+#include "Renderer.h"
 
 #include <d3d11.h>
 
@@ -8,7 +8,7 @@ namespace onut
 {
     class Window_win;
 
-    class Renderer_d3d11 : public IRenderer
+    class Renderer_d3d11 : public Renderer
     {
     public:
         virtual ~Renderer_d3d11();

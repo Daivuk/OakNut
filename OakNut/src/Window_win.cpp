@@ -3,11 +3,6 @@
 #include "StringUtils.h"
 #include "Window_win.h"
 
-onut::IWindow* onut::IWindow::createWindow()
-{
-    return new Window_win();
-}
-
 LRESULT CALLBACK WinProc(HWND handle, UINT msg, WPARAM wparam, LPARAM lparam)
 {
     if (msg == WM_DESTROY ||
@@ -20,7 +15,7 @@ LRESULT CALLBACK WinProc(HWND handle, UINT msg, WPARAM wparam, LPARAM lparam)
     {
         RECT clientRect;
         GetClientRect(handle, &clientRect);
-        onut::Game::getGame()->getComponent<onut::IWindow>()->setResolution({clientRect.right - clientRect.left, clientRect.bottom - clientRect.top});
+        onut::Game::getGame()->getComponent<onut::Window>()->setResolution({clientRect.right - clientRect.left, clientRect.bottom - clientRect.top});
         return 0;
     }
     else if (msg == WM_SETCURSOR)

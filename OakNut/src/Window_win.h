@@ -1,12 +1,12 @@
 #pragma once
 #if defined(WIN32)
-#include "IWindow.h"
+#include "Window.h"
 
 #include <Windows.h>
 
 namespace onut
 {
-    class Window_win : public IWindow
+    class Window_win : public Window
     {
     public:
         void onCreate() override;

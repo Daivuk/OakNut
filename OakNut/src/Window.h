@@ -3,11 +3,11 @@
 
 namespace onut
 {
-    class IWindow : public Component
+    class Window : public Component
     {
     public:
-        static IWindow* createWindow();
-        virtual ~IWindow();
+        Window();
+        virtual ~Window();
 
         virtual void onCreate() = 0;
         virtual void onUpdate() = 0;
@@ -18,8 +18,6 @@ namespace onut
         PROPERTY(glm::tvec2<int>, Resolution, glm::tvec2<int>(1280, 720));
 
     protected:
-        IWindow();
-
         glm::tvec2<int> m_realResolution;
     };
 }

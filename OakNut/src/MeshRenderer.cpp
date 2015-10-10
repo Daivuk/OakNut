@@ -1,6 +1,6 @@
 #include "Entity.h"
 #include "Game.h"
-#include "IRenderer.h"
+#include "Renderer.h"
 #include "MeshRenderer.h"
 
 void onut::MeshRenderer::onDraw()
@@ -9,5 +9,5 @@ void onut::MeshRenderer::onDraw()
     auto pEntity = dynamic_cast<Entity*>(getComponentManager());
     if (!pEntity) return;
 
-    Game::getGame()->getComponent<IRenderer>()->draw(getMesh(), getMaterial(), pEntity->getWorldMatrix());
+    Game::getGame()->getComponent<Renderer>()->draw(getMesh(), getMaterial(), pEntity->getWorldMatrix());
 }

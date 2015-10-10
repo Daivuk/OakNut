@@ -3,8 +3,8 @@
 #include "Dispatcher.h"
 #include "EntityFactory.h"
 #include "Game.h"
-#include "IRenderer.h"
-#include "IWindow.h"
+#include "Renderer.h"
+#include "Window.h"
 #include "Main.h"
 #include "MeshRenderer.h"
 #include "ObjectLibrary.h"
@@ -37,7 +37,7 @@ void onut::Main::main()
     pGame->loadPropertiesFromFile(pGame->getFilename());
 
     // Main loop
-    while (pGame->getComponent<IWindow>()->getEnabled())
+    while (pGame->getComponent<Window>()->getEnabled())
     {
         pGame->onUpdate();
         pGame->onCreate(); // This will call newly created components if not already initialized

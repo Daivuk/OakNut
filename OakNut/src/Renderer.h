@@ -9,18 +9,16 @@ namespace onut
     class Material;
     class Mesh;
 
-    class IRenderer : public Component
+    class Renderer : public Component
     {
     public:
-        virtual ~IRenderer();
+        Renderer();
+        virtual ~Renderer();
 
         virtual void onCreate() = 0;
         virtual void onDraw() = 0;
 
         virtual void setCamera(Camera* pCamera) = 0;
         virtual void draw(Mesh* pMesh, Material* pMaterial, const glm::mat4& transform) = 0;
-
-    protected:
-        IRenderer();
     };
 }

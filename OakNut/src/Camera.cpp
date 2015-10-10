@@ -2,15 +2,15 @@
 #include "Entity.h"
 #include "Game.h"
 #include "glm/gtc/matrix_transform.hpp"
-#include "IRenderer.h"
-#include "IWindow.h"
 #include "MeshRenderer.h"
+#include "Renderer.h"
+#include "Window.h"
 
 void onut::Camera::onUpdate()
 {
     if (getActive())
     {
-        auto pRenderer = onut::Game::getGame()->getComponent<IRenderer>();
+        auto pRenderer = onut::Game::getGame()->getComponent<Renderer>();
         pRenderer->setCamera(this);
     }
 }
@@ -23,7 +23,7 @@ glm::mat4 onut::Camera::getViewProj() const
     auto pEntity = dynamic_cast<Entity*>(getComponentManager());
     if (!pEntity) return ret;
 
-    auto pWindow = onut::Game::getGame()->getComponent<IWindow>();
+    auto pWindow = onut::Game::getGame()->getComponent<Window>();
 
     const glm::mat4& world = pEntity->getWorldMatrix();
 
