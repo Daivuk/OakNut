@@ -22,5 +22,9 @@ struct sInput
 
 float4 main(sInput input) : SV_TARGET
 {
-    return tint;
+    const float3 lightDir = -normalize(float3(-1, 1, -1));
+
+    float lightIntensity = saturate(dot(lightDir, input.normal));
+
+    return tint * lightIntensity;
 }

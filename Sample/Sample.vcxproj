@@ -93,6 +93,8 @@
   <ItemGroup>
     <None Include="assets\game.json" />
     <None Include="assets\materials\crate.material" />
+    <None Include="assets\materials\cratePurple.material" />
+    <None Include="assets\materials\sphere.material" />
     <None Include="assets\scenes\sample.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -15,13 +15,51 @@
       ]
     },
     {
-      "Name": "Cube",
+      "Name": "Cube1",
+      "Components": [
+        [
+          "MeshRenderer",
+          {
+            "Mesh": "meshes/cube.mesh",
+            "Material": "materials/cratePurple.material"
+          }
+        ],
+        [
+          "Rotate",
+          {
+            "Speed": 45
+          }
+        ]
+      ]
+    },
+    {
+      "Name": "Cube2",
+      "Position": [ 3, 0, 0 ],
       "Components": [
         [
           "MeshRenderer",
           {
             "Mesh": "meshes/cube.mesh",
             "Material": "materials/crate.material"
+          }
+        ],
+        [
+          "Rotate",
+          {
+            "Speed": 45
+          }
+        ]
+      ]
+    },
+    {
+      "Name": "Sphere",
+      "Position": [ -2, -3, 0 ],
+      "Components": [
+        [
+          "MeshRenderer",
+          {
+            "Mesh": "meshes/sphere.mesh",
+            "Material": "materials/sphere.material"
           }
         ],
         [

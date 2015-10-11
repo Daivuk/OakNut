@@ -10,8 +10,5 @@ namespace onut
     {
     public:
         virtual ~Resource() {}
-
-    private:
-        PROPERTY(std::string, Name, "Resource");
     };
 }

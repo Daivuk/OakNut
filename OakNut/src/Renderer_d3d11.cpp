@@ -281,7 +281,7 @@ void onut::Renderer_d3d11::draw(Mesh* pMesh, Material* pMaterial, const glm::mat
     {
         D3D11_MAPPED_SUBRESOURCE map;
         m_pDeviceContext->Map(m_pModelMatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-        memcpy(map.pData, glm::value_ptr(transform), sizeof(transform));
+        *(glm::mat4*)map.pData = glm::transpose(transform);
         m_pDeviceContext->Unmap(m_pModelMatrixBuffer, 0);
         m_pDeviceContext->VSSetConstantBuffers(1, 1, &m_pModelMatrixBuffer);
     }

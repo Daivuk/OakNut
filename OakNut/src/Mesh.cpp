@@ -1,22 +1,19 @@
 #include "Mesh.h"
 
-#include <fstream>
+#include <stdio.h>
 
 bool onut::Mesh::load(const std::string& filename)
 {
-    std::ifstream fic(filename);
-    if (fic.fail()) return false;
+    FILE* pFic = nullptr;
+#if defined(WIN32)
+    fopen_s(&pFic, filename.c_str(), "rb");
+    if (!pFic) return false;
+#else
+#error Unimplemented
+#endif
 
     unsigned long version;
-    try
-    {
-        fic.read((char*)&version, 4);
-    }
-    catch (std::exception e)
-    {
-        fic.close();
-        return false;
-    }
+    fread(&version, 4, 1, pFic);
     
     switch (version)
     {
@@ -25,41 +22,31 @@ bool onut::Mesh::load(const std::string& filename)
             sVertex* vertices = nullptr;
             uint16_t* indices = nullptr;
 
-            try
+            uint32_t nbVertices;
+            uint32_t nbIndices;
+
+            fread(&nbVertices, sizeof(uint32_t), 1, pFic);
+            fread(&nbIndices, sizeof(uint32_t), 1, pFic);
+
+            if (!nbVertices || !nbIndices)
             {
-                uint32_t nbVertices;
-                uint32_t nbIndices;
-
-                fic.read((char*)&nbVertices, 4);
-                fic.read((char*)&nbIndices, 4);
-
-                if (!nbVertices || !nbIndices)
-                {
-                    fic.close();
-                    return false;
-                }
-
-                vertices = new sVertex[nbVertices];
-                indices = new uint16_t[nbIndices];
-
-                fic.read((char*)vertices, nbVertices * sizeof(sVertex));
-                fic.read((char*)indices, nbIndices * sizeof(uint16_t));
-                fic.close();
-
-                setData(vertices, nbVertices, indices, nbIndices);
-            }
-            catch (std::exception e)
-            {
-                if (vertices) delete[] vertices;
-                if (indices) delete[] indices;
-                fic.close();
+                fclose(pFic);
                 return false;
             }
+
+            vertices = new sVertex[nbVertices];
+            indices = new uint16_t[nbIndices];
+
+            fread(vertices, sizeof(float), nbVertices * (sizeof(sVertex) / sizeof(float)), pFic);
+            fread(indices, sizeof(uint16_t), nbIndices, pFic);
+            fclose(pFic);
+
+            setData(vertices, nbVertices, indices, nbIndices);
             return true;
         }
         default:
         {
-            fic.close();
+            fclose(pFic);
             return false;
         }
     }
