@@ -92,6 +92,11 @@ float4 calculateFresnel(float4 material, float3 normal)
     return lightColor * intensity;
 }
 
+float4 caculateSelfIllumination(float4 material, float4 diffuse)
+{
+    return diffuse * material.b;
+}
+
 float4 main(sInput input) : SV_TARGET
 {
     float4 diffuse = diffuseTexture.Sample(samplerState, input.texCoord);
@@ -102,6 +107,7 @@ float4 main(sInput input) : SV_TARGET
     float4 finalColor = calculateLight(diffuse, input.normal);
     finalColor += calculateSpecular(materialMap, input.normal);
     //finalColor += calculateFresnel(materialMap, input.normal);
+    finalColor += caculateSelfIllumination(materialMap, diffuse);
 
     return finalColor;
 }
