@@ -17,11 +17,11 @@ onut::Entity* onut::Entity::getParent() const
 const glm::mat4& onut::Entity::getLocalMatrix() const
 {
     return
-        glm::rotate(glm::radians(getRotation().x), glm::vec3(1, 0, 0)) *
-        glm::rotate(glm::radians(getRotation().y), glm::vec3(0, 1, 0)) *
+        glm::translate(getPosition()) *
         glm::rotate(glm::radians(getRotation().z), glm::vec3(0, 0, 1)) *
-        glm::scale(getScale()) *
-        glm::translate(getPosition());
+        glm::rotate(glm::radians(getRotation().y), glm::vec3(0, 1, 0)) *
+        glm::rotate(glm::radians(getRotation().x), glm::vec3(1, 0, 0)) *
+        glm::scale(getScale());
 }
 
 const glm::mat4& onut::Entity::getWorldMatrix()

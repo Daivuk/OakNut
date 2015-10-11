@@ -3,7 +3,8 @@
   "Children": [
     {
       "Name": "Camera",
-      "Position": [ 0, -10, 0 ],
+      "Position": [ 3, -5, 3 ],
+      "Rotation": [ -30, 0, 30 ],
       "Components": [
         [
           "Camera",
