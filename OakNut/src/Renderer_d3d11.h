@@ -7,6 +7,7 @@
 namespace onut
 {
     class Window_win;
+    class Texture;
 
     class Renderer_d3d11 : public Renderer
     {
@@ -36,7 +37,13 @@ namespace onut
             float reflectivity;
             float metallic;
             float roughness;
-            float padding;
+            float cbMaterial_padding;
+        };
+
+        struct cbView
+        {
+            glm::vec3 viewDir;
+            float cbView_padding;
         };
 
         // Device stuff
@@ -57,6 +64,7 @@ namespace onut
         // Constant buffers
         ID3D11Buffer* m_pViewProjMatrixBuffer = nullptr;
         ID3D11Buffer* m_pModelMatrixBuffer = nullptr;
+        ID3D11Buffer* m_pViewBuffer = nullptr;
         ID3D11Buffer* m_pMaterialBuffer = nullptr;
 
         // Render states
@@ -64,6 +72,11 @@ namespace onut
         ID3D11RasterizerState* m_pForwardRasterizerState = nullptr;
         ID3D11BlendState* m_pForwardBlendState = nullptr;
         ID3D11SamplerState* m_pForwardSamplerState = nullptr;
+
+        // White texture for rendering without diffuse
+        Texture* pWhiteTexture = nullptr;
+        Texture* pBlackTexture = nullptr;
+        Texture* pFlatNormalTexture = nullptr;
     };
 }
 

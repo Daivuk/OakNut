@@ -3,7 +3,7 @@
   "Children": [
     {
       "Name": "Camera",
-      "Position": [ 3, -5, 3 ],
+      "Position": [ 3, -5, 7 ],
       "Rotation": [ -30, 0, 30 ],
       "Components": [
         [
@@ -14,7 +14,7 @@
         ]
       ]
     },
-    {
+    /* {
       "Name": "Cube1",
       "Components": [
         [
@@ -31,10 +31,29 @@
           }
         ]
       ]
-    },
+    },*/
     {
+      "Name": "Ogre",
+      "Scale": [ 2, 2, 2 ],
+      "Components": [
+        [
+          "MeshRenderer",
+          {
+            "Mesh": "meshes/ogre.mesh",
+            "Material": "materials/ogre.material"
+          }
+        ],
+        [
+          "Rotate",
+          {
+            "Speed": 45
+          }
+        ]
+      ]
+    }
+    /*  {
       "Name": "Cube2",
-      "Position": [ 3, 0, 0 ],
+      "Position": [ 4, 0.5, 0 ],
       "Components": [
         [
           "MeshRenderer",
@@ -69,6 +88,25 @@
           }
         ]
       ]
-    }
+    },
+    {
+      "Name": "Sphere",
+      "Position": [ -3, -2, 2 ],
+      "Components": [
+        [
+          "MeshRenderer",
+          {
+            "Mesh": "meshes/sphere.mesh",
+            "Material": "materials/spherePurple.material"
+          }
+        ],
+        [
+          "Rotate",
+          {
+            "Speed": 45
+          }
+        ]
+      ]
+    }*/
   ]
 }

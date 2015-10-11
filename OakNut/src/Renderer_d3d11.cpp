@@ -5,6 +5,7 @@
 #include "Mesh_d3d11.h"
 #include "Renderer_d3d11.h"
 #include "SceneManager.h"
+#include "Texture_d3d11.h"
 #include "Window_win.h"
 
 #include <fstream>
@@ -13,6 +14,8 @@
 
 onut::Renderer_d3d11::~Renderer_d3d11()
 {
+    if (pWhiteTexture) pWhiteTexture->release();
+
     if (m_pForwardDepthState) m_pForwardDepthState->Release();
     if (m_pForwardRasterizerState) m_pForwardRasterizerState->Release();
     if (m_pForwardBlendState) m_pForwardBlendState->Release();
@@ -21,6 +24,7 @@ onut::Renderer_d3d11::~Renderer_d3d11()
     if (m_pViewProjMatrixBuffer) m_pViewProjMatrixBuffer->Release();
     if (m_pModelMatrixBuffer) m_pModelMatrixBuffer->Release();
     if (m_pMaterialBuffer) m_pMaterialBuffer->Release();
+    if (m_pViewBuffer) m_pViewBuffer->Release();
 
     if (m_pForwardVertexShader) m_pForwardVertexShader->Release();
     if (m_pForwardPixelShader) m_pForwardPixelShader->Release();
@@ -40,6 +44,12 @@ void onut::Renderer_d3d11::onCreate()
     createShaders();
     createConstantBuffers();
     createStates();
+
+    // Create extra resources
+    pWhiteTexture = Texture::create();
+    pWhiteTexture->retain();
+    uint32_t whitePixel = 0xffffffff;
+    pWhiteTexture->setData(1, 1, &whitePixel);
 }
 
 void onut::Renderer_d3d11::onDraw()
@@ -172,6 +182,13 @@ void onut::Renderer_d3d11::createConstantBuffers()
         assert(ret == S_OK);
     }
 
+    // View
+    {
+        D3D11_BUFFER_DESC cbDesc = CD3D11_BUFFER_DESC(sizeof(cbView), D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
+        auto ret = m_pDevice->CreateBuffer(&cbDesc, nullptr, &m_pViewBuffer);
+        assert(ret == S_OK);
+    }
+
     // Material
     {
         D3D11_BUFFER_DESC cbDesc = CD3D11_BUFFER_DESC(sizeof(cbMaterial), D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
@@ -256,12 +273,26 @@ void onut::Renderer_d3d11::setCamera(Camera* pCamera)
     if (!pCamera) return;
     auto viewProj = pCamera->getViewProj();
 
-    // Set the constant buffer
-    D3D11_MAPPED_SUBRESOURCE map;
-    m_pDeviceContext->Map(m_pViewProjMatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-    *(glm::mat4*)map.pData = glm::transpose(viewProj);
-    m_pDeviceContext->Unmap(m_pViewProjMatrixBuffer, 0);
-    m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pViewProjMatrixBuffer);
+    // View proj
+    {
+        D3D11_MAPPED_SUBRESOURCE map;
+        m_pDeviceContext->Map(m_pViewProjMatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+        *(glm::mat4*)map.pData = glm::transpose(viewProj);
+        m_pDeviceContext->Unmap(m_pViewProjMatrixBuffer, 0);
+        m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pViewProjMatrixBuffer);
+    }
+
+    // View
+    {
+        D3D11_MAPPED_SUBRESOURCE map;
+        m_pDeviceContext->Map(m_pViewBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+
+        auto &view = *(cbView*)map.pData;
+        view.viewDir = pCamera->getViewDir();
+
+        m_pDeviceContext->Unmap(m_pViewBuffer, 0);
+        m_pDeviceContext->PSSetConstantBuffers(0, 1, &m_pViewBuffer);
+    }
 }
 
 void onut::Renderer_d3d11::draw(Mesh* pMesh, Material* pMaterial, const glm::mat4& transform)
@@ -290,14 +321,41 @@ void onut::Renderer_d3d11::draw(Mesh* pMesh, Material* pMaterial, const glm::mat
     {
         D3D11_MAPPED_SUBRESOURCE map;
         m_pDeviceContext->Map(m_pMaterialBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+
         auto &material = *(cbMaterial*)map.pData;
         material.tint = pMaterial->getTint();
         material.reflectivity = pMaterial->getReflectivity();
         material.metallic = pMaterial->getMetallic();
         material.roughness = pMaterial->getRoughness();
+
         m_pDeviceContext->Unmap(m_pMaterialBuffer, 0);
-        m_pDeviceContext->PSSetConstantBuffers(0, 1, &m_pMaterialBuffer);
+        m_pDeviceContext->PSSetConstantBuffers(1, 1, &m_pMaterialBuffer);
     }
+
+    // Bind textures
+    ID3D11ShaderResourceView *pResourceViews[3];
+    {
+        auto pDiffuse = pMaterial->getDiffuse();
+        if (!pDiffuse) pDiffuse = pWhiteTexture;
+        auto pDiffuseD3D11 = dynamic_cast<Texture_d3d11*>(pDiffuse);
+        assert(pDiffuseD3D11);
+        pResourceViews[0] = pDiffuseD3D11->getResourceView();
+    }
+    {
+        auto pNormalMap = pMaterial->getNormalMap();
+        if (!pNormalMap) pNormalMap = pWhiteTexture;
+        auto pNormalMapD3D11 = dynamic_cast<Texture_d3d11*>(pNormalMap);
+        assert(pNormalMapD3D11);
+        pResourceViews[1] = pNormalMapD3D11->getResourceView();
+    }
+    {
+        auto pMaterialMap = pMaterial->getMaterialMap();
+        if (!pMaterialMap) pMaterialMap = pWhiteTexture;
+        auto pMaterialMapD3D11 = dynamic_cast<Texture_d3d11*>(pMaterialMap);
+        assert(pMaterialMapD3D11);
+        pResourceViews[2] = pMaterialMapD3D11->getResourceView();
+    }
+    m_pDeviceContext->PSSetShaderResources(0, 3, pResourceViews);
 
     // Draw using the mesh buffers
     UINT stride = sizeof(Mesh::sVertex);

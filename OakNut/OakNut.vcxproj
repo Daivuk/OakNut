@@ -14,6 +14,7 @@
     <ClCompile Include="include\glm\detail\glm.cpp" />
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\EntityFactory.cpp" />
+    <ClCompile Include="src\LodePNG.cpp" />
     <ClCompile Include="src\Mesh_d3d11.cpp" />
     <ClCompile Include="src\ObjectLibrary.cpp" />
     <ClCompile Include="src\Component.cpp" />
@@ -38,6 +39,7 @@
     <ClCompile Include="src\SceneManager.cpp" />
     <ClCompile Include="src\StringUtils.cpp" />
     <ClCompile Include="src\Texture.cpp" />
+    <ClCompile Include="src\Texture_d3d11.cpp" />
     <ClCompile Include="src\Timing.cpp" />
     <ClCompile Include="src\Window.cpp" />
     <ClCompile Include="src\Window_win.cpp" />
@@ -63,10 +65,12 @@
     <ClInclude Include="include\Synchronous.h" />
     <ClInclude Include="include\Texture.h" />
     <ClInclude Include="include\TimeInfo.h" />
+    <ClInclude Include="src\LodePNG.h" />
     <ClInclude Include="src\Mesh_d3d11.h" />
     <ClInclude Include="src\Renderer.h" />
     <ClInclude Include="src\Main.h" />
     <ClInclude Include="src\Renderer_d3d11.h" />
+    <ClInclude Include="src\Texture_d3d11.h" />
     <ClInclude Include="src\Timing.h" />
     <ClInclude Include="src\Window.h" />
     <ClInclude Include="src\Window_win.h" />

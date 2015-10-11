@@ -14,5 +14,7 @@
     <None Include="assets\materials\crate.material" />
     <None Include="assets\materials\cratePurple.material" />
     <None Include="assets\materials\sphere.material" />
+    <None Include="assets\materials\spherePurple.material" />
+    <None Include="assets\materials\ogre.material" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,5 @@
+{
+  "Diffuse": "textures/ogre_dif.png",
+  "NormalMap": "textures/ogre_normal.png",
+  "MaterialMap": "textures/ogre_spec.png"
+}

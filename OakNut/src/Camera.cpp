@@ -40,3 +40,17 @@ glm::mat4 onut::Camera::getViewProj() const
 
     return std::move(ret);
 }
+
+glm::vec3 onut::Camera::getViewDir() const
+{
+    glm::vec3 ret;
+
+    auto pEntity = dynamic_cast<Entity*>(getComponentManager());
+    if (!pEntity) return ret;
+
+    const glm::mat4& world = pEntity->getWorldMatrix();
+    ret = glm::vec3{world[1]};
+    glm::normalize(ret);
+
+    return ret;
+}

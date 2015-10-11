@@ -83,6 +83,12 @@
     <ClCompile Include="src\Mesh_d3d11.cpp">
       <Filter>Resources</Filter>
     </ClCompile>
+    <ClCompile Include="src\LodePNG.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture_d3d11.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Main.h" />
@@ -161,6 +167,12 @@
     </ClInclude>
     <ClInclude Include="include\TimeInfo.h">
       <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LodePNG.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Texture_d3d11.h">
+      <Filter>Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

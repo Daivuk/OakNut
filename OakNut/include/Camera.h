@@ -9,6 +9,7 @@ namespace onut
         void onUpdate(const onut::TimeInfo& timeInfo) override;
 
         glm::mat4 getViewProj() const;
+        glm::vec3 getViewDir() const;
 
     private:
         PROPERTY(bool, Active, false);

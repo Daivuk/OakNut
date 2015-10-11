@@ -228,6 +228,28 @@ bool onut::PropertyManager::loadPropertiesFromJson(const Json::Value& json)
                 }
                 break;
             case ePropertyType::P_TEXTURE:
+                if (jsonElement.isString())
+                {
+                    auto ppTexture = static_cast<onut::Texture**>(propertyLink.pProperty);
+                    auto pContentManager = Game::getGame()->getComponent<ContentManager>();
+                    if (ppTexture && pContentManager)
+                    {
+                        auto filename = "assets/" + jsonElement.asString();
+                        auto pTexture = pContentManager->getResource<onut::Texture>(filename);
+                        if (!pTexture)
+                        {
+                            pTexture = onut::Texture::create();
+                            if (!pTexture->load(filename))
+                            {
+                                pTexture->release();
+                                break;
+                            }
+                            pContentManager->addResource(filename, pTexture);
+                        }
+                        pTexture->retain();
+                        *ppTexture = pTexture;
+                    }
+                }
                 break;
             default:
                 assert(false);

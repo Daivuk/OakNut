@@ -174,6 +174,7 @@ int main(int argc, char *argv[])
 	}
 
 	bool useYUp = false;
+    bool bLH = false;
 	int argi = 3;
 	float scale = 1;
 	while (argi < argc)
@@ -183,11 +184,16 @@ int main(int argc, char *argv[])
 
 		if (p == "-up")
 		{
-			if (v == "y" || v == "Y")
-			{
-				useYUp = true;
-			}
-		}
+            if (v == "y" || v == "Y")
+            {
+                useYUp = true;
+            }
+            else if (v == "-y" || v == "-Y")
+            {
+                useYUp = true;
+                bLH = true;
+            }
+        }
 		else if (p == "-scale")
 		{
 			std::stringstream ss(v);
@@ -316,7 +322,7 @@ int main(int argc, char *argv[])
 			{
 				unpacked_vertex.x = (float)fbxPosition[0];
 				unpacked_vertex.y = (float)fbxPosition[2];
-				unpacked_vertex.z = -(float)fbxPosition[1];
+                unpacked_vertex.z = bLH ? (float)fbxPosition[1] : -(float)fbxPosition[1];
 			}
 			else
 			{
@@ -331,8 +337,8 @@ int main(int argc, char *argv[])
 			{
 				unpacked_vertex.nx = (float)fbxNormal[0];
 				unpacked_vertex.ny = (float)fbxNormal[2];
-				unpacked_vertex.nz = -(float)fbxNormal[1];
-			}
+                unpacked_vertex.nz = bLH ? (float)fbxNormal[1] : -(float)fbxNormal[1];
+            }
 			else
 			{
 				unpacked_vertex.nx = (float)fbxNormal[0];
@@ -406,6 +412,15 @@ int main(int argc, char *argv[])
 	//RemapIndices(&primitiveGroup, 1, (unsigned short)packed_vertices.size(), &remappedPrimitiveGroup);
 	
 	// Remap
+
+    // Reorder indices
+    if (bLH)
+    {
+        for (decltype(indices.size()) ind = 0; ind < indices.size(); ind += 3)
+        {
+            std::swap(indices[ind + 0], indices[ind + 1]);
+        }
+    }
 
 	unsigned long nbVertices = (unsigned long)packed_vertices.size();
 	unsigned long nbIndices = (unsigned long)indices.size();
