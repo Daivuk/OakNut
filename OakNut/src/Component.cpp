@@ -1,5 +1,6 @@
 #include "Component.h"
 #include "ComponentManager.h"
+#include "Entity.h"
 
 onut::Component::Component()
 {
@@ -21,4 +22,9 @@ bool onut::Component::isCreated() const
 onut::ComponentManager* onut::Component::getComponentManager() const
 {
     return m_pComponentManager;
+}
+
+onut::Entity* onut::Component::getEntity() const
+{
+    return dynamic_cast<Entity*>(m_pComponentManager);
 }

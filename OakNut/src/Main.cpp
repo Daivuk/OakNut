@@ -35,13 +35,19 @@ void onut::Main::main()
     // Load game properties from game.json
     // This file is mendatory
     pGame->loadPropertiesFromFile(pGame->getFilename());
+    pGame->onCreate(); // Force load base components
 
-    // Main loop
-    while (pGame->getComponent<Window>()->getEnabled())
+    auto pWindow = pGame->getComponent<Window>();
+    auto pTiming = pGame->getComponent<Timing>();
+    if (pWindow && pTiming)
     {
-        pGame->onUpdate();
-        pGame->onCreate(); // This will call newly created components if not already initialized
-        pGame->onDraw();
+        // Main loop
+        while (pWindow->getEnabled())
+        {
+            pGame->onUpdate(pTiming->getTimeInfo());
+            pGame->onCreate(); // This will call newly created components if not already initialized
+            pGame->onDraw();
+        }
     }
 
     // Free up

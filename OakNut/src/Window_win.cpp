@@ -121,7 +121,7 @@ void onut::Window_win::onCreate()
     m_realResolution = {clientRect.right - clientRect.left, clientRect.bottom - clientRect.top};
 }
 
-void onut::Window_win::onUpdate()
+void onut::Window_win::onUpdate(const onut::TimeInfo& timeInfo)
 {
     MSG msg = {0};
     if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))

@@ -2,9 +2,11 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="src\Sample.cpp" />
+    <ClCompile Include="src\Rotate.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Sample.h" />
+    <ClInclude Include="src\Rotate.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\scenes\sample.json" />

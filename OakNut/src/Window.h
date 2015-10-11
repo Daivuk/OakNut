@@ -10,7 +10,7 @@ namespace onut
         virtual ~Window();
 
         virtual void onCreate() = 0;
-        virtual void onUpdate() = 0;
+        virtual void onUpdate(const onut::TimeInfo& timeInfo) = 0;
 
         const glm::tvec2<int>& getRealResolution() const;
 

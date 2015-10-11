@@ -22,6 +22,12 @@
             "Mesh": "meshes/cube.mesh",
             "Material": "materials/red.material"
           }
+        ],
+        [
+          "Rotate",
+          {
+            "Speed": 45
+          }
         ]
       ]
     }

@@ -159,6 +159,9 @@
     <ClInclude Include="src\Mesh_d3d11.h">
       <Filter>Resources</Filter>
     </ClInclude>
+    <ClInclude Include="include\TimeInfo.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Renderer">
@@ -191,5 +194,16 @@
     <Filter Include="Resources">
       <UniqueIdentifier>{753348ed-60aa-4915-8ec2-afc8460b9c65}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{0b788786-bf2f-4972-ac96-7175a17d7ddb}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="src\vForward.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="src\pForward.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

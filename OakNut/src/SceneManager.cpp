@@ -18,17 +18,21 @@ onut::SceneManager::~SceneManager()
 
 void onut::SceneManager::onCreate()
 {
-    // Load the default scene
-    if (!getStartupScene().empty())
-    {
-        loadScene(getStartupScene());
-    }
 }
 
-void onut::SceneManager::onUpdate()
+void onut::SceneManager::onUpdate(const onut::TimeInfo& timeInfo)
 {
+    if (!m_bFirstSceneLoaded)
+    {
+        m_bFirstSceneLoaded = true;
+        // Load the default scene
+        if (!getStartupScene().empty())
+        {
+            loadScene(getStartupScene());
+        }
+    }
     createEntity(m_pRootEntity);
-    updateEntity(m_pRootEntity);
+    updateEntity(m_pRootEntity, timeInfo);
 }
 
 void onut::SceneManager::createEntity(Entity* pEntity)
@@ -40,15 +44,15 @@ void onut::SceneManager::createEntity(Entity* pEntity)
     }
 }
 
-void onut::SceneManager::updateEntity(Entity* pEntity)
+void onut::SceneManager::updateEntity(Entity* pEntity, const onut::TimeInfo& timeInfo)
 {
-    pEntity->onUpdate();
+    pEntity->onUpdate(timeInfo);
     for (auto pChild : pEntity->getChildren())
     {
         if (pChild->getEnabled() &&
             pChild->getVisible())
         {
-            updateEntity(pChild);
+            updateEntity(pChild, timeInfo);
         }
     }
 }

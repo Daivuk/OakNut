@@ -7,6 +7,8 @@
 #include <vector>
 #include <sstream>
 
+#define VERSION 1
+
 struct sVertex
 {
 	float x, y, z;
@@ -197,7 +199,7 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	unsigned long version = 1;
+    unsigned long version = VERSION;
 	fwrite(&version, 4, 1, pFic);
 
 	// Initialize the SDK manager. This object handles memory management.

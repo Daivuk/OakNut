@@ -10,7 +10,7 @@ namespace onut
     {
     public:
         void onCreate() override;
-        void onUpdate() override;
+        void onUpdate(const onut::TimeInfo& timeInfo) override;
 
         HWND getHandle() const;
 

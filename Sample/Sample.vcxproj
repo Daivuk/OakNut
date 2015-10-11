@@ -83,9 +83,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Rotate.cpp" />
     <ClCompile Include="src\Sample.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Rotate.h" />
     <ClInclude Include="src\Sample.h" />
   </ItemGroup>
   <ItemGroup>

@@ -117,13 +117,13 @@ void onut::ComponentManager::onCreate()
     }
 }
 
-void onut::ComponentManager::onUpdate()
+void onut::ComponentManager::onUpdate(const onut::TimeInfo& timeInfo)
 {
     for (auto pComponent : m_Components)
     {
         if (pComponent->getEnabled() && pComponent->isCreated())
         {
-            pComponent->onUpdate();
+            pComponent->onUpdate(timeInfo);
         }
     }
 }

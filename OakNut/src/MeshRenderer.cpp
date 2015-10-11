@@ -5,7 +5,7 @@
 
 void onut::MeshRenderer::onDraw()
 {
-    if (!getMesh() || !getMaterial() || !getComponentManager()) return;
+    if (!getMesh() || /*!getMaterial() ||*/ !getComponentManager()) return;
     auto pEntity = dynamic_cast<Entity*>(getComponentManager());
     if (!pEntity) return;
 

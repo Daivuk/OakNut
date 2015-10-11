@@ -17,9 +17,9 @@ onut::Entity* onut::Entity::getParent() const
 const glm::mat4& onut::Entity::getLocalMatrix() const
 {
     return
-        glm::rotate(getRotation().x, glm::vec3(1, 0, 0)) *
-        glm::rotate(getRotation().y, glm::vec3(0, 1, 0)) *
-        glm::rotate(getRotation().z, glm::vec3(0, 0, 1)) *
+        glm::rotate(glm::radians(getRotation().x), glm::vec3(1, 0, 0)) *
+        glm::rotate(glm::radians(getRotation().y), glm::vec3(0, 1, 0)) *
+        glm::rotate(glm::radians(getRotation().z), glm::vec3(0, 0, 1)) *
         glm::scale(getScale()) *
         glm::translate(getPosition());
 }

@@ -7,7 +7,7 @@ namespace onut
     class Dispatcher : public Component
     {
     public:
-        void onUpdate() override;
+        void onUpdate(const onut::TimeInfo& timeInfo) override;
         
         template<typename Tfn, typename ... Targs>
         void dispatch(Tfn callback, Targs... args)

@@ -1,5 +1,6 @@
 #pragma once
 #include "PropertyManager.h"
+#include "TimeInfo.h"
 
 #include <vector>
 
@@ -16,7 +17,7 @@ namespace onut
 
         // Component events
         virtual void onCreate();
-        virtual void onUpdate();
+        virtual void onUpdate(const onut::TimeInfo& timeInfo);
         virtual void onDraw();
 
         // Insertion of components

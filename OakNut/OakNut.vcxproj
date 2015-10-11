@@ -62,6 +62,7 @@
     <ClInclude Include="include\StringUtils.h" />
     <ClInclude Include="include\Synchronous.h" />
     <ClInclude Include="include\Texture.h" />
+    <ClInclude Include="include\TimeInfo.h" />
     <ClInclude Include="src\Mesh_d3d11.h" />
     <ClInclude Include="src\Renderer.h" />
     <ClInclude Include="src\Main.h" />
@@ -69,6 +70,16 @@
     <ClInclude Include="src\Timing.h" />
     <ClInclude Include="src\Window.h" />
     <ClInclude Include="src\Window_win.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="src\pForward.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="src\vForward.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+    </FxCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{BD2A1C40-BB11-4336-BF90-578F6825CC0D}</ProjectGuid>

@@ -6,7 +6,7 @@
 #include "Renderer.h"
 #include "Window.h"
 
-void onut::Camera::onUpdate()
+void onut::Camera::onUpdate(const onut::TimeInfo& timeInfo)
 {
     if (getActive())
     {
@@ -27,7 +27,7 @@ glm::mat4 onut::Camera::getViewProj() const
 
     const glm::mat4& world = pEntity->getWorldMatrix();
 
-    auto projection = glm::perspectiveFovRH(getFov(),
+    auto projection = glm::perspectiveFovRH(glm::radians(getFov()),
                                             static_cast<float>(pWindow->getRealResolution().x),
                                             static_cast<float>(pWindow->getRealResolution().y),
                                             getNear(), getFar());
@@ -36,7 +36,7 @@ glm::mat4 onut::Camera::getViewProj() const
     glm::vec3 up{world[2]};
     auto view = glm::lookAtRH(eye, center, up);
 
-    ret = view * projection;
+    ret = projection * view;
 
     return std::move(ret);
 }
