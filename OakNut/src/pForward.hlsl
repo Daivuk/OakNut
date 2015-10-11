@@ -1,4 +1,16 @@
 SamplerState samplerState : register(s0);
+Texture2D Diffuse : register(t0);
+Texture2D NormalMap : register(t1);
+Texture2D MaterialMap : register(t2);
+
+cbuffer cbMaterial : register(b0)
+{
+    float4 tint;
+    float reflectivity;
+    float metallic;
+    float roughness;
+    float padding;
+};
 
 struct sInput
 {
@@ -10,5 +22,5 @@ struct sInput
 
 float4 main(sInput input) : SV_TARGET
 {
-	return float4(1.0f, 0.0f, 0.0f, 1.0f);
+    return tint;
 }

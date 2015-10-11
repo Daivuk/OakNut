@@ -1,0 +1,7 @@
+{
+  "Name": "Crate",
+  "Tint": [ 0.75, 0.5, 1, 1 ],
+  "Diffuse": "textures/crate1_diffuse.png",
+  "NormalMap": "textures/crate1_normal.png",
+  "MaterialMap": "textures/crate1_bump.png"
+}

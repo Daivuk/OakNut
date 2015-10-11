@@ -1,6 +1,7 @@
 #if defined(ONUT_RENDERER_D3D11)
 #include "Camera.h"
 #include "ComponentManager.h"
+#include "Material.h"
 #include "Mesh_d3d11.h"
 #include "Renderer_d3d11.h"
 #include "SceneManager.h"
@@ -19,6 +20,7 @@ onut::Renderer_d3d11::~Renderer_d3d11()
 
     if (m_pViewProjMatrixBuffer) m_pViewProjMatrixBuffer->Release();
     if (m_pModelMatrixBuffer) m_pModelMatrixBuffer->Release();
+    if (m_pMaterialBuffer) m_pMaterialBuffer->Release();
 
     if (m_pForwardVertexShader) m_pForwardVertexShader->Release();
     if (m_pForwardPixelShader) m_pForwardPixelShader->Release();
@@ -169,6 +171,13 @@ void onut::Renderer_d3d11::createConstantBuffers()
         auto ret = m_pDevice->CreateBuffer(&cbDesc, nullptr, &m_pModelMatrixBuffer);
         assert(ret == S_OK);
     }
+
+    // Material
+    {
+        D3D11_BUFFER_DESC cbDesc = CD3D11_BUFFER_DESC(sizeof(cbMaterial), D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
+        auto ret = m_pDevice->CreateBuffer(&cbDesc, nullptr, &m_pMaterialBuffer);
+        assert(ret == S_OK);
+    }
 }
 
 void onut::Renderer_d3d11::createStates()
@@ -257,14 +266,8 @@ void onut::Renderer_d3d11::setCamera(Camera* pCamera)
 
 void onut::Renderer_d3d11::draw(Mesh* pMesh, Material* pMaterial, const glm::mat4& transform)
 {
-    // Set it's matrix
-    D3D11_MAPPED_SUBRESOURCE map;
-    m_pDeviceContext->Map(m_pModelMatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-    memcpy(map.pData, glm::value_ptr(transform), sizeof(transform));
-    m_pDeviceContext->Unmap(m_pModelMatrixBuffer, 0);
-    m_pDeviceContext->VSSetConstantBuffers(1, 1, &m_pModelMatrixBuffer);
-
-    // Draw using the mesh buffers
+    // Some validation
+    if (!pMaterial) return;
     auto pMesh_d3d11 = dynamic_cast<Mesh_d3d11*>(pMesh);
     if (!pMesh_d3d11) return;
     auto pVertexBuffer = pMesh_d3d11->getVertexBuffer();
@@ -274,6 +277,29 @@ void onut::Renderer_d3d11::draw(Mesh* pMesh, Material* pMaterial, const glm::mat
     auto count = pMesh_d3d11->getCount();
     if (!count) return;
 
+    // Set it's matrix
+    {
+        D3D11_MAPPED_SUBRESOURCE map;
+        m_pDeviceContext->Map(m_pModelMatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+        memcpy(map.pData, glm::value_ptr(transform), sizeof(transform));
+        m_pDeviceContext->Unmap(m_pModelMatrixBuffer, 0);
+        m_pDeviceContext->VSSetConstantBuffers(1, 1, &m_pModelMatrixBuffer);
+    }
+
+    // Setup it's material
+    {
+        D3D11_MAPPED_SUBRESOURCE map;
+        m_pDeviceContext->Map(m_pMaterialBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+        auto &material = *(cbMaterial*)map.pData;
+        material.tint = pMaterial->getTint();
+        material.reflectivity = pMaterial->getReflectivity();
+        material.metallic = pMaterial->getMetallic();
+        material.roughness = pMaterial->getRoughness();
+        m_pDeviceContext->Unmap(m_pMaterialBuffer, 0);
+        m_pDeviceContext->PSSetConstantBuffers(0, 1, &m_pMaterialBuffer);
+    }
+
+    // Draw using the mesh buffers
     UINT stride = sizeof(Mesh::sVertex);
     UINT offset = 0;
     m_pDeviceContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride, &offset);

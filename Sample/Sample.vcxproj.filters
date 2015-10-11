@@ -11,6 +11,6 @@
   <ItemGroup>
     <None Include="assets\scenes\sample.json" />
     <None Include="assets\game.json" />
-    <None Include="assets\materials\matRed.json" />
+    <None Include="assets\materials\crate.material" />
   </ItemGroup>
 </Project>

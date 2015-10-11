@@ -180,6 +180,28 @@ bool onut::PropertyManager::loadPropertiesFromJson(const Json::Value& json)
                 }
                 break;
             case ePropertyType::P_MATERIAL:
+                if (jsonElement.isString())
+                {
+                    auto ppMaterial = static_cast<onut::Material**>(propertyLink.pProperty);
+                    auto pContentManager = Game::getGame()->getComponent<ContentManager>();
+                    if (ppMaterial && pContentManager)
+                    {
+                        auto filename = "assets/" + jsonElement.asString();
+                        auto pMaterial = pContentManager->getResource<onut::Material>(filename);
+                        if (!pMaterial)
+                        {
+                            pMaterial = new onut::Material();
+                            if (!pMaterial->loadPropertiesFromFile(filename))
+                            {
+                                pMaterial->release();
+                                break;
+                            }
+                            pContentManager->addResource(filename, pMaterial);
+                        }
+                        pMaterial->retain();
+                        *ppMaterial = pMaterial;
+                    }
+                }
                 break;
             case ePropertyType::P_MESH:
                 if (jsonElement.isString())
@@ -188,22 +210,24 @@ bool onut::PropertyManager::loadPropertiesFromJson(const Json::Value& json)
                     auto pContentManager = Game::getGame()->getComponent<ContentManager>();
                     if (ppMesh && pContentManager)
                     {
-                        auto szFilename = jsonElement.asString();
-                        auto pMesh = pContentManager->getResource<onut::Mesh>(szFilename);
+                        auto filename = "assets/" + jsonElement.asString();
+                        auto pMesh = pContentManager->getResource<onut::Mesh>(filename);
                         if (!pMesh)
                         {
                             pMesh = onut::Mesh::create();
-                            if (!pMesh->load(szFilename))
+                            if (!pMesh->load(filename))
                             {
                                 pMesh->release();
                                 break;
                             }
-                            pContentManager->addResource(szFilename, pMesh);
+                            pContentManager->addResource(filename, pMesh);
                         }
                         pMesh->retain();
                         *ppMesh = pMesh;
                     }
                 }
+                break;
+            case ePropertyType::P_TEXTURE:
                 break;
             default:
                 assert(false);

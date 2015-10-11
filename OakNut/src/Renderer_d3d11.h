@@ -30,6 +30,15 @@ namespace onut
         void createConstantBuffers();
         void createStates();
 
+        struct cbMaterial
+        {
+            glm::vec4 tint;
+            float reflectivity;
+            float metallic;
+            float roughness;
+            float padding;
+        };
+
         // Device stuff
         IDXGISwapChain* m_pSwapChain = nullptr;
         ID3D11Device* m_pDevice = nullptr;
@@ -48,6 +57,7 @@ namespace onut
         // Constant buffers
         ID3D11Buffer* m_pViewProjMatrixBuffer = nullptr;
         ID3D11Buffer* m_pModelMatrixBuffer = nullptr;
+        ID3D11Buffer* m_pMaterialBuffer = nullptr;
 
         // Render states
         ID3D11DepthStencilState* m_pForwardDepthState = nullptr;

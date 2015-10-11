@@ -4,12 +4,14 @@
 
 namespace onut
 {
-    class Resource :
-        public Object // Has ref counting
+    class Resource
+        : public Object // Has ref counting
+        , public PropertyManager
     {
     public:
         virtual ~Resource() {}
 
     private:
+        PROPERTY(std::string, Name, "Resource");
     };
 }

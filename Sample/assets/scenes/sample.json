@@ -20,7 +20,7 @@
           "MeshRenderer",
           {
             "Mesh": "meshes/cube.mesh",
-            "Material": "materials/red.material"
+            "Material": "materials/crate.material"
           }
         ],
         [

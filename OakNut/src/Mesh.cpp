@@ -4,7 +4,7 @@
 
 bool onut::Mesh::load(const std::string& filename)
 {
-    std::ifstream fic("assets/" + filename);
+    std::ifstream fic(filename);
     if (fic.fail()) return false;
 
     unsigned long version;

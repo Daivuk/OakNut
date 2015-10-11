@@ -56,6 +56,7 @@ namespace onut
     class Material;
     class Mesh;
     class Object;
+    class Texture;
 
     class PropertyManager
     {
@@ -105,6 +106,7 @@ namespace onut
         static SPropertyLink make_property(std::vector<Component*> *pVar) { return{ePropertyType::P_COMPONENT_ARRAY, pVar}; }
         static SPropertyLink make_property(Material **pVar) { return{ePropertyType::P_MATERIAL, (void*)pVar}; }
         static SPropertyLink make_property(Mesh **pVar) { return{ePropertyType::P_MESH, (void*)pVar}; }
+        static SPropertyLink make_property(Texture **pVar) { return{ePropertyType::P_TEXTURE, (void*)pVar}; }
         std::unordered_map<std::string, SPropertyLink> m_properties;
     };
 
