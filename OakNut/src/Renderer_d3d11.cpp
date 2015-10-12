@@ -1,6 +1,7 @@
 #if defined(ONUT_RENDERER_D3D11)
 #include "Camera.h"
 #include "ComponentManager.h"
+#include "InputLayoutFactory_d3d11.h"
 #include "Material.h"
 #include "Mesh_d3d11.h"
 #include "Renderer_d3d11.h"
@@ -14,7 +15,20 @@
 
 onut::Renderer_d3d11::~Renderer_d3d11()
 {
-    if (pWhiteTexture) pWhiteTexture->release();
+    if (m_pCurrentInputLayout) m_pCurrentInputLayout->Release();
+    if (m_pInputLayoutFactory) delete m_pInputLayoutFactory;
+    if (m_pCurrentVertexShader) m_pCurrentVertexShader->Release();
+    if (m_pCurrentPixelShader) m_pCurrentPixelShader->Release();
+
+    if (m_pWhiteTexture) m_pWhiteTexture->release();
+    if (m_pFlatNormalTexture) m_pFlatNormalTexture->release();
+    if (m_pBlackTexture) m_pBlackTexture->release();
+
+    for (auto& kv : m_shaders)
+    {
+        if (kv.second.first) kv.second.first->Release();
+        if (kv.second.second) kv.second.second->Release();
+    }
 
     if (m_pForwardDepthState) m_pForwardDepthState->Release();
     if (m_pForwardRasterizerState) m_pForwardRasterizerState->Release();
@@ -25,10 +39,6 @@ onut::Renderer_d3d11::~Renderer_d3d11()
     if (m_pModelMatrixBuffer) m_pModelMatrixBuffer->Release();
     if (m_pMaterialBuffer) m_pMaterialBuffer->Release();
     if (m_pViewBuffer) m_pViewBuffer->Release();
-
-    if (m_pForwardVertexShader) m_pForwardVertexShader->Release();
-    if (m_pForwardPixelShader) m_pForwardPixelShader->Release();
-    if (m_pForwardInputLayout) m_pForwardInputLayout->Release();
 
     if (m_pDepthStencilView) m_pDepthStencilView->Release();
     if (m_pRenderTargetView) m_pRenderTargetView->Release();
@@ -45,11 +55,23 @@ void onut::Renderer_d3d11::onCreate()
     createConstantBuffers();
     createStates();
 
+    m_pInputLayoutFactory = new InputLayoutFactory_d3d11(this);
+
     // Create extra resources
-    pWhiteTexture = Texture::create();
-    pWhiteTexture->retain();
+    m_pWhiteTexture = Texture::create();
+    m_pWhiteTexture->retain();
     uint32_t whitePixel = 0xffffffff;
-    pWhiteTexture->setData(1, 1, &whitePixel);
+    m_pWhiteTexture->setData(1, 1, &whitePixel);
+
+    m_pFlatNormalTexture = Texture::create();
+    m_pFlatNormalTexture->retain();
+    uint32_t flatNormalPixel = 0xff8080ff;
+    m_pFlatNormalTexture->setData(1, 1, &flatNormalPixel);
+
+    m_pBlackTexture = Texture::create();
+    m_pBlackTexture->retain();
+    uint32_t blackPixel = 0xff000000;
+    m_pBlackTexture->setData(1, 1, &blackPixel);
 }
 
 void onut::Renderer_d3d11::onDraw()
@@ -131,39 +153,56 @@ void onut::Renderer_d3d11::createRenderTargets()
     pDepthStencilTexture->Release();
 }
 
-void onut::Renderer_d3d11::createShaders()
+void onut::Renderer_d3d11::createProgram(const std::string& name, const std::vector<Mesh::eElement>& layout)
 {
+    //TODO:
 #if defined(_DEBUG)
-    std::ifstream vsFile("Debug/vForward.cso", std::ios::binary);
-    std::ifstream psFile("Debug/pForward.cso", std::ios::binary);
+    std::ifstream vsFile("Debug/v" + name + ".cso", std::ios::binary);
+    std::ifstream psFile("Debug/p" + name + ".cso", std::ios::binary);
 #else
-    std::ifstream vsFile("Release/vForward.cso", std::ios::binary);
-    std::ifstream psFile("Release/pForward.cso", std::ios::binary);
+    std::ifstream vsFile("Release/v" + name + ".cso", std::ios::binary);
+    std::ifstream psFile("Release/" + name + ".cso", std::ios::binary);
 #endif
 
     std::vector<char> vsData = {std::istreambuf_iterator<char>(vsFile), std::istreambuf_iterator<char>()};
     std::vector<char> psData = {std::istreambuf_iterator<char>(psFile), std::istreambuf_iterator<char>()};
 
-    auto ret = m_pDevice->CreateVertexShader(vsData.data(), vsData.size(), nullptr, &m_pForwardVertexShader);
-    assert(ret == S_OK);
-    ret = m_pDevice->CreatePixelShader(psData.data(), psData.size(), nullptr, &m_pForwardPixelShader);
-    assert(ret == S_OK);
+    ID3D11VertexShader* pVertexShader = nullptr;
+    ID3D11PixelShader* pPixelShader = nullptr;
 
-    // Create input layout
-    D3D11_INPUT_ELEMENT_DESC layout[] = {
-        {"V_ELEMENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"V_ELEMENT", 1, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"V_ELEMENT", 2, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"V_ELEMENT", 3, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-    };
-
-    ret = m_pDevice->CreateInputLayout(layout, 4, vsData.data(), vsData.size(), &m_pForwardInputLayout);
+    auto ret = m_pDevice->CreateVertexShader(vsData.data(), vsData.size(), nullptr, &pVertexShader);
+    assert(ret == S_OK);
+    ret = m_pDevice->CreatePixelShader(psData.data(), psData.size(), nullptr, &pPixelShader);
     assert(ret == S_OK);
 
-    // Bind the shaders
-    m_pDeviceContext->VSSetShader(m_pForwardVertexShader, nullptr, 0);
-    m_pDeviceContext->PSSetShader(m_pForwardPixelShader, nullptr, 0);
-    m_pDeviceContext->IASetInputLayout(m_pForwardInputLayout);
+    m_vsShaderBlobs.push_back(std::make_pair(layout, std::move(vsData)));
+    m_shaders.push_back(std::make_pair(layout, std::make_pair(pVertexShader, pPixelShader)));
+}
+
+void onut::Renderer_d3d11::createShaders()
+{
+    createProgram("Forward", {
+        Mesh::eElement::POSITION, 
+        Mesh::eElement::NORMAL, 
+        Mesh::eElement::TEXCOORD});
+    createProgram("ForwardColor", {
+        Mesh::eElement::POSITION, 
+        Mesh::eElement::NORMAL, 
+        Mesh::eElement::TEXCOORD, 
+        Mesh::eElement::COLOR});
+    createProgram("ForwardBump", {
+        Mesh::eElement::POSITION, 
+        Mesh::eElement::NORMAL,
+        Mesh::eElement::TANGENT,
+        Mesh::eElement::BINORMAL,
+        Mesh::eElement::TEXCOORD});
+    createProgram("ForwardBumpColor", {
+        Mesh::eElement::POSITION, 
+        Mesh::eElement::NORMAL, 
+        Mesh::eElement::TANGENT, 
+        Mesh::eElement::BINORMAL,
+        Mesh::eElement::TEXCOORD, 
+        Mesh::eElement::COLOR});
 }
 
 void onut::Renderer_d3d11::createConstantBuffers()
@@ -295,76 +334,6 @@ void onut::Renderer_d3d11::setCamera(Camera* pCamera)
     }
 }
 
-void onut::Renderer_d3d11::draw(Mesh* pMesh, Material* pMaterial, const glm::mat4& transform)
-{
-    // Some validation
-    if (!pMaterial) return;
-    auto pMesh_d3d11 = dynamic_cast<Mesh_d3d11*>(pMesh);
-    if (!pMesh_d3d11) return;
-    auto pVertexBuffer = pMesh_d3d11->getVertexBuffer();
-    if (!pVertexBuffer) return;
-    auto pIndexBuffer = pMesh_d3d11->getIndexBuffer();
-    if (!pIndexBuffer) return;
-    auto count = pMesh_d3d11->getCount();
-    if (!count) return;
-
-    // Set it's matrix
-    {
-        D3D11_MAPPED_SUBRESOURCE map;
-        m_pDeviceContext->Map(m_pModelMatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-        *(glm::mat4*)map.pData = glm::transpose(transform);
-        m_pDeviceContext->Unmap(m_pModelMatrixBuffer, 0);
-        m_pDeviceContext->VSSetConstantBuffers(1, 1, &m_pModelMatrixBuffer);
-    }
-
-    // Setup it's material
-    {
-        D3D11_MAPPED_SUBRESOURCE map;
-        m_pDeviceContext->Map(m_pMaterialBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-
-        auto &material = *(cbMaterial*)map.pData;
-        material.tint = pMaterial->getTint();
-        material.reflectivity = pMaterial->getReflectivity();
-        material.metallic = pMaterial->getMetallic();
-        material.roughness = pMaterial->getRoughness();
-
-        m_pDeviceContext->Unmap(m_pMaterialBuffer, 0);
-        m_pDeviceContext->PSSetConstantBuffers(1, 1, &m_pMaterialBuffer);
-    }
-
-    // Bind textures
-    ID3D11ShaderResourceView *pResourceViews[3];
-    {
-        auto pDiffuse = pMaterial->getDiffuse();
-        if (!pDiffuse) pDiffuse = pWhiteTexture;
-        auto pDiffuseD3D11 = dynamic_cast<Texture_d3d11*>(pDiffuse);
-        assert(pDiffuseD3D11);
-        pResourceViews[0] = pDiffuseD3D11->getResourceView();
-    }
-    {
-        auto pNormalMap = pMaterial->getNormalMap();
-        if (!pNormalMap) pNormalMap = pWhiteTexture;
-        auto pNormalMapD3D11 = dynamic_cast<Texture_d3d11*>(pNormalMap);
-        assert(pNormalMapD3D11);
-        pResourceViews[1] = pNormalMapD3D11->getResourceView();
-    }
-    {
-        auto pMaterialMap = pMaterial->getMaterialMap();
-        if (!pMaterialMap) pMaterialMap = pWhiteTexture;
-        auto pMaterialMapD3D11 = dynamic_cast<Texture_d3d11*>(pMaterialMap);
-        assert(pMaterialMapD3D11);
-        pResourceViews[2] = pMaterialMapD3D11->getResourceView();
-    }
-    m_pDeviceContext->PSSetShaderResources(0, 3, pResourceViews);
-
-    // Draw using the mesh buffers
-    UINT stride = sizeof(Mesh::sVertex);
-    UINT offset = 0;
-    m_pDeviceContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride, &offset);
-    m_pDeviceContext->IASetIndexBuffer(pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-    m_pDeviceContext->DrawIndexed(count, 0, 0);
-}
-
 ID3D11Device* onut::Renderer_d3d11::getDevice() const
 {
     return m_pDevice;
@@ -373,6 +342,37 @@ ID3D11Device* onut::Renderer_d3d11::getDevice() const
 ID3D11DeviceContext* onut::Renderer_d3d11::getDeviceContext() const
 {
     return m_pDeviceContext;
+}
+
+onut::InputLayoutFactory_d3d11* onut::Renderer_d3d11::getInputLayoutFactory() const
+{
+    return m_pInputLayoutFactory;
+}
+
+const std::vector<char>& onut::Renderer_d3d11::getVertexShaderBlobForLayout(const std::vector<Mesh::eElement>& layout) const
+{
+    for (auto& kv : m_vsShaderBlobs)
+    {
+        if (kv.first == layout) return kv.second;
+    }
+    assert(false); // Unsupported vertex layout by OakNut. Custom vertex layout unsupported in version 1.0
+    return m_vsShaderBlobs[0].second;
+}
+
+void onut::Renderer_d3d11::getProgramForLayout(const std::vector<Mesh::eElement>& layout, ID3D11VertexShader** ppVertexShader, ID3D11PixelShader** ppPixelShader) const
+{
+    for (auto& kv : m_shaders)
+    {
+        if (kv.first == layout)
+        {
+            *ppVertexShader = kv.second.first;
+            *ppPixelShader = kv.second.second;
+            return;
+        }
+    }
+    assert(false); // Unsupported vertex layout by OakNut. Custom vertex layout unsupported in version 1.0
+    *ppVertexShader = nullptr;
+    *ppPixelShader = nullptr;
 }
 
 void onut::Renderer_d3d11::onUpdate(const onut::TimeInfo& timeInfo)
@@ -403,6 +403,105 @@ void onut::Renderer_d3d11::onUpdate(const onut::TimeInfo& timeInfo)
     m_pDeviceContext->RSSetState(m_pForwardRasterizerState);
     m_pDeviceContext->OMSetBlendState(m_pForwardBlendState, nullptr, 0xffffffff);
     m_pDeviceContext->PSSetSamplers(0, 1, &m_pForwardSamplerState);
+}
+
+void onut::Renderer_d3d11::draw(Mesh* pMesh, Material* pMaterial, const glm::mat4& transform)
+{
+    // Some validation
+    if (!pMaterial) return;
+    auto pMesh_d3d11 = dynamic_cast<Mesh_d3d11*>(pMesh);
+    if (!pMesh_d3d11) return;
+    auto pVertexBuffer = pMesh_d3d11->getVertexBuffer();
+    if (!pVertexBuffer) return;
+    auto pIndexBuffer = pMesh_d3d11->getIndexBuffer();
+    if (!pIndexBuffer) return;
+    auto count = pMesh_d3d11->getCount();
+    if (!count) return;
+    auto pInputLayout = pMesh_d3d11->getInputLayout();
+    if (!pInputLayout) return;
+    auto pVertexShader = pMesh_d3d11->getVertexShader();
+    if (!pVertexShader) return;
+    auto pPixelShader = pMesh_d3d11->getPixelShader();
+    if (!pPixelShader) return;
+
+    // Set it's matrix
+    {
+        D3D11_MAPPED_SUBRESOURCE map;
+        m_pDeviceContext->Map(m_pModelMatrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+        *(glm::mat4*)map.pData = glm::transpose(transform);
+        m_pDeviceContext->Unmap(m_pModelMatrixBuffer, 0);
+        m_pDeviceContext->VSSetConstantBuffers(1, 1, &m_pModelMatrixBuffer);
+    }
+
+    // Setup it's material
+    {
+        D3D11_MAPPED_SUBRESOURCE map;
+        m_pDeviceContext->Map(m_pMaterialBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+
+        auto &material = *(cbMaterial*)map.pData;
+        material.tint = pMaterial->getTint();
+        material.reflectivity = pMaterial->getReflectivity();
+        material.metallic = pMaterial->getMetallic();
+        material.roughness = pMaterial->getRoughness();
+
+        m_pDeviceContext->Unmap(m_pMaterialBuffer, 0);
+        m_pDeviceContext->PSSetConstantBuffers(1, 1, &m_pMaterialBuffer);
+    }
+
+    // Bind textures
+    ID3D11ShaderResourceView *pResourceViews[3];
+    {
+        auto pDiffuse = pMaterial->getDiffuse();
+        if (!pDiffuse) pDiffuse = m_pWhiteTexture;
+        auto pDiffuseD3D11 = dynamic_cast<Texture_d3d11*>(pDiffuse);
+        assert(pDiffuseD3D11);
+        pResourceViews[0] = pDiffuseD3D11->getResourceView();
+    }
+    {
+        auto pNormalMap = pMaterial->getNormalMap();
+        if (!pNormalMap) pNormalMap = m_pFlatNormalTexture;
+        auto pNormalMapD3D11 = dynamic_cast<Texture_d3d11*>(pNormalMap);
+        assert(pNormalMapD3D11);
+        pResourceViews[1] = pNormalMapD3D11->getResourceView();
+    }
+    {
+        auto pMaterialMap = pMaterial->getMaterialMap();
+        if (!pMaterialMap) pMaterialMap = m_pBlackTexture;
+        auto pMaterialMapD3D11 = dynamic_cast<Texture_d3d11*>(pMaterialMap);
+        assert(pMaterialMapD3D11);
+        pResourceViews[2] = pMaterialMapD3D11->getResourceView();
+    }
+    m_pDeviceContext->PSSetShaderResources(0, 3, pResourceViews);
+
+    // Bind program
+    if (m_pCurrentInputLayout != pInputLayout)
+    {
+        if (m_pCurrentInputLayout) m_pCurrentInputLayout->Release();
+        m_pCurrentInputLayout = pInputLayout;
+        m_pCurrentInputLayout->AddRef();
+        m_pDeviceContext->IASetInputLayout(m_pCurrentInputLayout);
+    }
+    if (m_pCurrentVertexShader != pVertexShader)
+    {
+        if (m_pCurrentVertexShader) m_pCurrentVertexShader->Release();
+        m_pCurrentVertexShader = pVertexShader;
+        m_pCurrentVertexShader->AddRef();
+        m_pDeviceContext->VSSetShader(m_pCurrentVertexShader, nullptr, 0);
+    }
+    if (m_pCurrentPixelShader != pPixelShader)
+    {
+        if (m_pCurrentPixelShader) m_pCurrentPixelShader->Release();
+        m_pCurrentPixelShader = pPixelShader;
+        m_pCurrentPixelShader->AddRef();
+        m_pDeviceContext->PSSetShader(m_pCurrentPixelShader, nullptr, 0);
+    }
+
+    // Draw using the mesh buffers
+    UINT stride = static_cast<UINT>(pMesh_d3d11->getStride());
+    UINT offset = 0;
+    m_pDeviceContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride, &offset);
+    m_pDeviceContext->IASetIndexBuffer(pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+    m_pDeviceContext->DrawIndexed(count, 0, 0);
 }
 
 #endif

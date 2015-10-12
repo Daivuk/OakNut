@@ -6,24 +6,76 @@
 #include <Windows.h>
 #include <vector>
 #include <sstream>
+#include <cinttypes>
 
-#define VERSION 1
+#define VERSION 2
 
 struct sVertex
 {
-	float x, y, z;
-	float nx, ny, nz;
-	float u, v;
-	float r, g, b;
+    float x, y, z;
+    float nx, ny, nz;
+    float tx, ty, tz;
+    float bx, by, bz;
+    float u, v;
+    float r, g, b;
 
-	bool operator==(const sVertex& in_other) const
-	{
-		return (
-			x == in_other.x && y == in_other.y && z == in_other.z &&
-			nx == in_other.nx && ny == in_other.ny && nz == in_other.nz &&
-			u == in_other.u && v == in_other.v &&
-			r == in_other.r && g == in_other.g && b == in_other.b);
-	}
+    bool operator==(const sVertex& in_other) const
+    {
+        return (
+            x == in_other.x && y == in_other.y && z == in_other.z &&
+            nx == in_other.nx && ny == in_other.ny && nz == in_other.nz &&
+            u == in_other.u && v == in_other.v &&
+            r == in_other.r && g == in_other.g && b == in_other.b);
+    }
+};
+
+struct sVertexNoColor
+{
+    float x, y, z;
+    float nx, ny, nz;
+    float tx, ty, tz;
+    float bx, by, bz;
+    float u, v;
+
+    bool operator==(const sVertex& in_other) const
+    {
+        return (
+            x == in_other.x && y == in_other.y && z == in_other.z &&
+            nx == in_other.nx && ny == in_other.ny && nz == in_other.nz &&
+            u == in_other.u && v == in_other.v);
+    }
+};
+
+struct sVertexNoBump
+{
+    float x, y, z;
+    float nx, ny, nz;
+    float u, v;
+    float r, g, b;
+
+    bool operator==(const sVertex& in_other) const
+    {
+        return (
+            x == in_other.x && y == in_other.y && z == in_other.z &&
+            nx == in_other.nx && ny == in_other.ny && nz == in_other.nz &&
+            u == in_other.u && v == in_other.v &&
+            r == in_other.r && g == in_other.g && b == in_other.b);
+    }
+};
+
+struct sVertexNoColorNoBump
+{
+    float x, y, z;
+    float nx, ny, nz;
+    float u, v;
+
+    bool operator==(const sVertex& in_other) const
+    {
+        return (
+            x == in_other.x && y == in_other.y && z == in_other.z &&
+            nx == in_other.nx && ny == in_other.ny && nz == in_other.nz &&
+            u == in_other.u && v == in_other.v);
+    }
 };
 
 /* Tab character ("\t") counter */
@@ -142,6 +194,69 @@ FbxMesh* findMesh(FbxNode* pNode)
 	return NULL;
 }
 
+void computeTangentBasis(const float *P0, const float *P1, const float *P2,
+                         const float *UV0, const float *UV1, const float *UV2,
+                         const float *normal, float *tangent, float *binormal)
+{
+    //using Eric Lengyel's approach with a few modifications
+    //from Mathematics for 3D Game Programmming and Computer Graphics
+    // want to be able to trasform a vector in Object Space to Tangent Space
+    // such that the x-axis cooresponds to the 's' direction and the
+    // y-axis corresponds to the 't' direction, and the z-axis corresponds
+    // to <0,0,1>, straight up out of the texture map
+
+    //let P = v1 - v0
+    float P[3] = {P1[0] - P0[0], P1[1] - P0[1], P1[2] - P0[2]};
+    //let Q = v2 - v0
+    float Q[3] = {P2[0] - P0[0], P2[1] - P0[1], P2[2] - P0[2]};
+    float s1 = UV1[0] - UV0[0];
+    float t1 = UV1[1] - UV0[1];
+    float s2 = UV2[0] - UV0[0];
+    float t2 = UV2[1] - UV0[1];
+
+
+    //we need to solve the equation
+    // P = s1*T + t1*B
+    // Q = s2*T + t2*B
+    // for T and B
+
+
+    //this is a linear system with six unknowns and six equatinos, for TxTyTz BxByBz
+    //[px,py,pz] = [s1,t1] * [Tx,Ty,Tz]
+    // qx,qy,qz     s2,t2     Bx,By,Bz
+
+    //multiplying both sides by the inverse of the s,t matrix gives
+    //[Tx,Ty,Tz] = 1/(s1t2-s2t1) *  [t2,-t1] * [px,py,pz]
+    // Bx,By,Bz                      -s2,s1	    qx,qy,qz  
+
+    //solve this for the unormalized T and B to get from tangent to object space
+
+    float tmp = 0.0f;
+    if (fabsf(s1*t2 - s2*t1) <= 0.0001f)
+    {
+        tmp = 1.0f;
+    }
+    else
+    {
+        tmp = 1.0f / (s1*t2 - s2*t1);
+    }
+
+    tangent[0] = (t2*P[0] - t1*Q[0]);
+    tangent[1] = (t2*P[1] - t1*Q[1]);
+    tangent[2] = (t2*P[2] - t1*Q[2]);
+
+    tangent[0] = tangent[0] * tmp;
+    tangent[1] = tangent[1] * tmp;
+    tangent[2] = tangent[2] * tmp;
+
+    binormal[0] = (s1*Q[0] - s2*P[0]);
+    binormal[1] = (s1*Q[1] - s2*P[1]);
+    binormal[2] = (s1*Q[2] - s2*P[2]);
+
+    binormal[0] = binormal[0] * tmp;
+    binormal[1] = binormal[1] * tmp;
+    binormal[2] = binormal[2] * tmp;
+}
 
 #define STRIDE 11
 #define POSITION_OFFSET 0
@@ -175,15 +290,17 @@ int main(int argc, char *argv[])
 
 	bool useYUp = false;
     bool bLH = false;
+    bool bColor = false;
+    bool bBump = false;
 	int argi = 3;
 	float scale = 1;
-	while (argi < argc)
-	{
-		std::string p = argv[argi++];
-		std::string v = argv[argi++];
+    while (argi < argc)
+    {
+        std::string p = argv[argi++];
+        std::string v = argv[argi++];
 
-		if (p == "-up")
-		{
+        if (p == "-up")
+        {
             if (v == "y" || v == "Y")
             {
                 useYUp = true;
@@ -194,19 +311,35 @@ int main(int argc, char *argv[])
                 bLH = true;
             }
         }
-		else if (p == "-scale")
-		{
-			std::stringstream ss(v);
-			if (!(ss >> scale)) 
-			{
-				printf("Error parsing -scale.\n"); 
-				return 1;
-			}
-		}
-	}
+        else if (p == "-scale")
+        {
+            std::stringstream ss(v);
+            if (!(ss >> scale))
+            {
+                printf("Error parsing -scale.\n");
+                return 1;
+            }
+        }
+        else if (p == "-color")
+        {
+            bColor = v == "on";
+        }
+        else if (p == "-bump")
+        {
+            bBump = v == "on";
+        }
+    }
 
     unsigned long version = VERSION;
 	fwrite(&version, 4, 1, pFic);
+
+#define FLAG_HAS_COLOR 0x1
+#define FLAG_HAS_BINORMALS 0x2
+
+    uint32_t flags = 0;
+    if (bColor) flags |= FLAG_HAS_COLOR;
+    if (bBump) flags |= FLAG_HAS_BINORMALS;
+    fwrite(&flags, 4, 1, pFic);
 
 	// Initialize the SDK manager. This object handles memory management.
 	FbxManager* lSdkManager = FbxManager::Create();
@@ -270,9 +403,9 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	std::vector<sVertex>			unpacked_vertices;
-	std::vector<sVertex>			packed_vertices;
-	std::vector<unsigned short>		indices;
+	std::vector<sVertex> unpacked_vertices;
+	std::vector<sVertex> packed_vertices;
+	std::vector<unsigned short> indices;
 
 	// Get indices + normal/texcoords
 	int current = 0;
@@ -416,21 +549,125 @@ int main(int argc, char *argv[])
     // Reorder indices
     if (bLH)
     {
+        //for (decltype(indices.size()) ind = 0; ind < indices.size(); ind += 3)
+        //{
+        //    std::swap(indices[ind + 0], indices[ind + 1]);
+        //}
+    }
+
+    // Compute tagent basis
+    if (bBump)
+    {
         for (decltype(indices.size()) ind = 0; ind < indices.size(); ind += 3)
         {
-            std::swap(indices[ind + 0], indices[ind + 1]);
+            computeTangentBasis(
+                &packed_vertices[indices[ind + 0]].x,
+                &packed_vertices[indices[ind + 1]].x,
+                &packed_vertices[indices[ind + 2]].x,
+                &packed_vertices[indices[ind + 0]].u,
+                &packed_vertices[indices[ind + 1]].u,
+                &packed_vertices[indices[ind + 2]].u,
+                &packed_vertices[indices[ind + 0]].nx,
+                &packed_vertices[indices[ind + 0]].tx,
+                &packed_vertices[indices[ind + 0]].bx);
+            computeTangentBasis(
+                &packed_vertices[indices[ind + 1]].x,
+                &packed_vertices[indices[ind + 2]].x,
+                &packed_vertices[indices[ind + 0]].x,
+                &packed_vertices[indices[ind + 1]].u,
+                &packed_vertices[indices[ind + 2]].u,
+                &packed_vertices[indices[ind + 0]].u,
+                &packed_vertices[indices[ind + 1]].nx,
+                &packed_vertices[indices[ind + 1]].tx,
+                &packed_vertices[indices[ind + 1]].bx);
+            computeTangentBasis(
+                &packed_vertices[indices[ind + 2]].x,
+                &packed_vertices[indices[ind + 0]].x,
+                &packed_vertices[indices[ind + 1]].x,
+                &packed_vertices[indices[ind + 2]].u,
+                &packed_vertices[indices[ind + 0]].u,
+                &packed_vertices[indices[ind + 1]].u,
+                &packed_vertices[indices[ind + 2]].nx,
+                &packed_vertices[indices[ind + 2]].tx,
+                &packed_vertices[indices[ind + 2]].bx);
         }
     }
 
-	unsigned long nbVertices = (unsigned long)packed_vertices.size();
-	unsigned long nbIndices = (unsigned long)indices.size();
-	fwrite(&nbVertices, 4, 1, pFic);
-	fwrite(&nbIndices, 4, 1, pFic);
-	fwrite(&packed_vertices[0], 4, nbVertices * 11, pFic);
-	fwrite(&indices[0], 2, nbIndices, pFic);
+    if (bLH)
+    {
+        for (auto& vert : packed_vertices)
+        {
+            vert.x = -vert.x;
+            vert.nx = -vert.nx;
+            vert.tx = -vert.tx;
 
+            //vert.bx = -vert.bx;
+            vert.by = -vert.by;
+            vert.bz = -vert.bz;
+        }
+    }
+
+    unsigned long nbVertices = (unsigned long)packed_vertices.size();
+    unsigned long nbIndices = (unsigned long)indices.size();
+    fwrite(&nbVertices, 4, 1, pFic);
+    fwrite(&nbIndices, 4, 1, pFic);
+    if (bColor)
+    {
+        if (bBump)
+        {
+            fwrite(&packed_vertices[0], 4, nbVertices * (sizeof(sVertex) / sizeof(float)), pFic);
+        }
+        else
+        {
+            std::vector<sVertexNoBump> packed_verticesFinal;
+            for (auto& vert : packed_vertices)
+            {
+                sVertexNoBump newVert{
+                    vert.x, vert.y, vert.z,
+                    vert.nx, vert.ny, vert.nz,
+                    vert.u, vert.v,
+                    vert.r, vert.g, vert.b
+                };
+                packed_verticesFinal.push_back(newVert);
+            }
+            fwrite(&packed_verticesFinal[0], 4, nbVertices * (sizeof(sVertexNoBump) / sizeof(float)), pFic);
+        }
+    }
+    else
+    {
+        if (bBump)
+        {
+            std::vector<sVertexNoColor> packed_verticesFinal;
+            for (auto& vert : packed_vertices)
+            {
+                sVertexNoColor newVert{
+                    vert.x, vert.y, vert.z,
+                    vert.nx, vert.ny, vert.nz,
+                    vert.tx, vert.ty, vert.tz,
+                    vert.bx, vert.by, vert.bz,
+                    vert.u, vert.v
+                };
+                packed_verticesFinal.push_back(newVert);
+            }
+            fwrite(&packed_verticesFinal[0], 4, nbVertices * (sizeof(sVertexNoColor) / sizeof(float)), pFic);
+        }
+        else
+        {
+            std::vector<sVertexNoColorNoBump> packed_verticesFinal;
+            for (auto& vert : packed_vertices)
+            {
+                sVertexNoColorNoBump newVert{
+                    vert.x, vert.y, vert.z,
+                    vert.nx, vert.ny, vert.nz,
+                    vert.u, vert.v
+                };
+                packed_verticesFinal.push_back(newVert);
+            }
+            fwrite(&packed_verticesFinal[0], 4, nbVertices * (sizeof(sVertexNoColorNoBump) / sizeof(float)), pFic);
+        }
+    }
+    fwrite(&indices[0], 2, nbIndices, pFic);
 	fclose(pFic);
-
 	printf("Vert count: %i\n", (int)nbVertices); 
 
 #ifdef _DEBUG

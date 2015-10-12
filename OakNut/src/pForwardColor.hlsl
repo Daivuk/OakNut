@@ -11,6 +11,7 @@ struct sInput
     float4 position : SV_POSITION;
     float3 normal   : NORMAL;
     float2 texCoord : TEXCOORD;
+    float4 color    : COLOR;
 };
 
 float4 main(sInput input) : SV_TARGET
@@ -18,7 +19,7 @@ float4 main(sInput input) : SV_TARGET
     float4 diffuse = diffuseTexture.Sample(samplerState, input.texCoord);
     float4 normalMap = mormalMapTexture.Sample(samplerState, input.texCoord);
     float4 materialMap = materialMapTexture.Sample(samplerState, input.texCoord);
-    diffuse *= tint;
+    diffuse *= tint * input.color;
 
     return calculateLighting(diffuse, input.normal, materialMap);
 }

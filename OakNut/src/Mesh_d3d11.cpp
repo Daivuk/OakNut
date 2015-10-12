@@ -1,5 +1,6 @@
 #if defined(ONUT_RENDERER_D3D11)
 #include "Game.h"
+#include "InputLayoutFactory_d3d11.h"
 #include "Mesh_d3d11.h"
 #include "Renderer_d3d11.h"
 
@@ -10,6 +11,9 @@ onut::Mesh* onut::Mesh::create()
 
 onut::Mesh_d3d11::~Mesh_d3d11()
 {
+    if (m_pInputLayout) m_pInputLayout->Release();
+    if (m_pPixelShader) m_pPixelShader->Release();
+    if (m_pVertexShader) m_pVertexShader->Release();
     if (m_pVertexBuffer) m_pVertexBuffer->Release();
     if (m_pIndexBuffer) m_pIndexBuffer->Release();
 }
@@ -24,17 +28,43 @@ ID3D11Buffer* onut::Mesh_d3d11::getIndexBuffer() const
     return m_pIndexBuffer;
 }
 
+ID3D11InputLayout* onut::Mesh_d3d11::getInputLayout() const
+{
+    return m_pInputLayout;
+}
+
 uint32_t onut::Mesh_d3d11::getCount() const
 {
     return m_count;
 }
 
-bool onut::Mesh_d3d11::setData(sVertex* vertices, uint32_t vertexCount, uint16_t* indices, uint32_t indexCount)
+uint32_t onut::Mesh_d3d11::getStride() const
+{
+    return m_stride;
+}
+
+ID3D11VertexShader* onut::Mesh_d3d11::getVertexShader() const
+{
+    return m_pVertexShader;
+}
+
+ID3D11PixelShader* onut::Mesh_d3d11::getPixelShader() const
+{
+    return m_pPixelShader;
+}
+
+bool onut::Mesh_d3d11::setData(float* vertices, const std::vector<eElement>& elements, uint32_t vertexCount, uint16_t* indices, uint32_t indexCount)
 {
     if (m_pVertexBuffer) m_pVertexBuffer->Release();
     m_pVertexBuffer = nullptr;
     if (m_pIndexBuffer) m_pIndexBuffer->Release();
     m_pIndexBuffer = nullptr;
+    if (m_pInputLayout) m_pInputLayout->Release();
+    m_pInputLayout = nullptr;
+    if (m_pPixelShader) m_pPixelShader->Release();
+    m_pPixelShader = nullptr;
+    if (m_pVertexShader) m_pVertexShader->Release();
+    m_pVertexShader = nullptr;
     m_count = 0;
     if (!vertexCount || !vertices || !indices || !indexCount) return false;
 
@@ -42,12 +72,17 @@ bool onut::Mesh_d3d11::setData(sVertex* vertices, uint32_t vertexCount, uint16_t
     if (!pRenderer) return false;
     auto pDevice = pRenderer->getDevice();
     if (!pDevice) return false;
+    auto pInputLayoutFactory = pRenderer->getInputLayoutFactory();
+    if (!pInputLayoutFactory) return false;
+
+    auto structureSize = getStructureSize(elements);
+    m_stride = structureSize * sizeof(float);
 
     // Create the vertex buffer
     // Set up the description of the static vertex buffer.
     D3D11_BUFFER_DESC vertexBufferDesc;
     vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-    vertexBufferDesc.ByteWidth = sizeof(sVertex) * vertexCount;
+    vertexBufferDesc.ByteWidth = sizeof(float) * structureSize * vertexCount;
     vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     vertexBufferDesc.CPUAccessFlags = 0;
     vertexBufferDesc.MiscFlags = 0;
@@ -88,6 +123,34 @@ bool onut::Mesh_d3d11::setData(sVertex* vertices, uint32_t vertexCount, uint16_t
         m_pIndexBuffer = nullptr;
         return false;
     }
+
+    m_pInputLayout = pInputLayoutFactory->createInputLayout(elements);
+    if (!m_pInputLayout)
+    {
+        m_pVertexBuffer->Release();
+        m_pVertexBuffer = nullptr;
+        m_pIndexBuffer->Release();
+        m_pIndexBuffer = nullptr;
+        return false;
+    }
+    m_pInputLayout->AddRef();
+
+    // Get shaders
+    pRenderer->getProgramForLayout(elements, &m_pVertexShader, &m_pPixelShader);
+    if (!m_pVertexShader || !m_pPixelShader)
+    {
+        m_pVertexBuffer->Release();
+        m_pVertexBuffer = nullptr;
+        m_pIndexBuffer->Release();
+        m_pIndexBuffer = nullptr;
+        m_pInputLayout->Release();
+        m_pInputLayout = nullptr;
+        m_pVertexShader = nullptr;
+        m_pPixelShader = nullptr;
+        return false;
+    }
+    m_pVertexShader->AddRef();
+    m_pPixelShader->AddRef();
 
     m_count = indexCount;
 

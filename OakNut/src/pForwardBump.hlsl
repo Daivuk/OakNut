@@ -10,6 +10,8 @@ struct sInput
 {
     float4 position : SV_POSITION;
     float3 normal   : NORMAL;
+    float3 tangent  : TANGENT;
+    float3 binormal : BINORMAL;
     float2 texCoord : TEXCOORD;
 };
 
@@ -20,5 +22,11 @@ float4 main(sInput input) : SV_TARGET
     float4 materialMap = materialMapTexture.Sample(samplerState, input.texCoord);
     diffuse *= tint;
 
-    return calculateLighting(diffuse, input.normal, materialMap);
+    normalMap.xyz = normalMap.xyz * 2 - 1;
+    float3 normal = normalize(
+        normalMap.x * input.tangent + 
+        normalMap.y * input.binormal + 
+        normalMap.z * input.normal);
+
+    return calculateLighting(diffuse, normal, materialMap);
 }

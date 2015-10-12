@@ -89,6 +89,9 @@
     <ClCompile Include="src\Texture_d3d11.cpp">
       <Filter>Resources</Filter>
     </ClCompile>
+    <ClCompile Include="src\InputLayoutFactory_d3d11.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Main.h" />
@@ -174,6 +177,9 @@
     <ClInclude Include="src\Texture_d3d11.h">
       <Filter>Resources</Filter>
     </ClInclude>
+    <ClInclude Include="src\InputLayoutFactory_d3d11.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Renderer">
@@ -209,13 +215,54 @@
     <Filter Include="shaders">
       <UniqueIdentifier>{0b788786-bf2f-4972-ac96-7175a17d7ddb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shaders\VS">
+      <UniqueIdentifier>{b400e7f6-96c7-4c29-9638-3baab099ea8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\PS">
+      <UniqueIdentifier>{1d38ec7e-a736-4629-a776-808ebad62085}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\PS\headers">
+      <UniqueIdentifier>{e10cb103-8754-4d87-90a0-264fccfd5234}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shaders\VS\headers">
+      <UniqueIdentifier>{025578a6-f2a7-40f4-9eb0-297a03a90ccc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="src\vForward.hlsl">
-      <Filter>shaders</Filter>
-    </FxCompile>
     <FxCompile Include="src\pForward.hlsl">
-      <Filter>shaders</Filter>
+      <Filter>shaders\PS</Filter>
     </FxCompile>
+    <FxCompile Include="src\pForwardColor.hlsl">
+      <Filter>shaders\PS</Filter>
+    </FxCompile>
+    <FxCompile Include="src\vForward.hlsl">
+      <Filter>shaders\VS</Filter>
+    </FxCompile>
+    <FxCompile Include="src\vForwardColor.hlsl">
+      <Filter>shaders\VS</Filter>
+    </FxCompile>
+    <FxCompile Include="src\vForwardBump.hlsl">
+      <Filter>shaders\VS</Filter>
+    </FxCompile>
+    <FxCompile Include="src\vForwardBumpColor.hlsl">
+      <Filter>shaders\VS</Filter>
+    </FxCompile>
+    <FxCompile Include="src\pForwardBump.hlsl">
+      <Filter>shaders\PS</Filter>
+    </FxCompile>
+    <FxCompile Include="src\pForwardBumpColor.hlsl">
+      <Filter>shaders\PS</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\pForwardConstantBuffers.hlsli">
+      <Filter>shaders\PS\headers</Filter>
+    </None>
+    <None Include="src\pForwardLighting.hlsli">
+      <Filter>shaders\PS\headers</Filter>
+    </None>
+    <None Include="src\vForwardConstantBuffers.hlsli">
+      <Filter>shaders\VS\headers</Filter>
+    </None>
   </ItemGroup>
 </Project>
