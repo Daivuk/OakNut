@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="include\glm\detail\glm.cpp" />
     <ClCompile Include="src\Camera.cpp" />
+    <ClCompile Include="src\DirectionalLight.cpp" />
     <ClCompile Include="src\EntityFactory.cpp" />
     <ClCompile Include="src\InputLayoutFactory_d3d11.cpp" />
     <ClCompile Include="src\LodePNG.cpp" />
@@ -24,6 +25,7 @@
     <ClCompile Include="src\Dispatcher.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\PointLight.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\json\json_reader.cpp" />
     <ClCompile Include="src\json\json_value.cpp" />
@@ -47,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Camera.h" />
+    <ClInclude Include="include\DirectionalLight.h" />
     <ClInclude Include="include\EntityFactory.h" />
     <ClInclude Include="include\ObjectLibrary.h" />
     <ClInclude Include="include\Component.h" />
@@ -59,6 +62,7 @@
     <ClInclude Include="include\Mesh.h" />
     <ClInclude Include="include\MeshRenderer.h" />
     <ClInclude Include="include\Object.h" />
+    <ClInclude Include="include\PointLight.h" />
     <ClInclude Include="include\PropertyManager.h" />
     <ClInclude Include="include\Resource.h" />
     <ClInclude Include="include\SceneManager.h" />

@@ -92,6 +92,12 @@
     <ClCompile Include="src\InputLayoutFactory_d3d11.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\PointLight.cpp">
+      <Filter>Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DirectionalLight.cpp">
+      <Filter>Lights</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Main.h" />
@@ -180,6 +186,12 @@
     <ClInclude Include="src\InputLayoutFactory_d3d11.h">
       <Filter>Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="include\PointLight.h">
+      <Filter>Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DirectionalLight.h">
+      <Filter>Lights</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Renderer">
@@ -226,6 +238,9 @@
     </Filter>
     <Filter Include="shaders\VS\headers">
       <UniqueIdentifier>{025578a6-f2a7-40f4-9eb0-297a03a90ccc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lights">
+      <UniqueIdentifier>{2f732810-33f2-4344-a58c-3c5a8256c8be}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

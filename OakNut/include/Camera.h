@@ -6,8 +6,6 @@ namespace onut
     class Camera : public Component
     {
     public:
-        void onUpdate(const onut::TimeInfo& timeInfo) override;
-
         glm::mat4 getViewProj() const;
         glm::vec3 getViewDir() const;
 

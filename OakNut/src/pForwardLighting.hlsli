@@ -32,49 +32,48 @@
 //Cobalt      0.662124    0.654864    0.633732
 //Platinum    0.672411    0.637331    0.585456
 
-static const float3 lightDir = -normalize(float3(-1, 1, -2));
-static const float4 lightColor = float4(1, 1, 1, 1);
-
-float4 calculateLight(float4 diffuse, float3 normal)
+float4 calculateLight(float4 diffuse, float4 lightColor, float3 lightDir, float3 normal, float4 material)
 {
-    float intensity = dot(normal, lightDir);
-    intensity = saturate(intensity);
+    // Light dot
+    float lightDot = saturate(dot(normal, lightDir));
+    float4 finalColor = diffuse * lightColor * lightDot;
 
-    return diffuse * lightColor * intensity;
-}
-
-float4 calculateSpecular(float4 material, float3 normal)
-{
+    // Specular
     float3 h = normalize(lightDir - viewDir);
-        float intensity = dot(normal, h);
-    intensity = saturate(intensity);
-    intensity = pow(intensity, material.g * 100);
-    intensity *= material.r;
+    float specular = dot(normal, h);
+    specular = saturate(specular);
+    specular = pow(specular, material.g * 100);
+    specular *= material.r;
+    finalColor += lightColor * specular;
 
-    return lightColor * intensity;
+    return finalColor;
 }
 
-float4 calculateFresnel(float4 material, float3 normal)
+float4 calculateLighting(float3 worldPos, float4 diffuse, float3 normal, float4 material)
 {
-    float intensity = dot(normal, -viewDir);
-    intensity = 1 - saturate(intensity);
-    intensity = pow(intensity, material.g * 20);
-    intensity *= material.r;
+    float4 finalColor = float4(0, 0, 0, 1);
 
-    return lightColor * intensity;
-}
+    // Point lights
+    for (int i = 0; i < pointLightCount; ++i)
+    {
+        // Intensity
+        float3 lightDir = pointLights[i].position - worldPos;
+        float dis = dot(lightDir, lightDir);
+        float disNorm = dis / (pointLights[i].radius * pointLights[i].radius);
+        float attenuation = saturate(1 - disNorm);
+        lightDir = normalize(lightDir);
+        
+        finalColor += calculateLight(diffuse, pointLights[i].color * attenuation, lightDir, normal, material);
+    }
 
-float4 caculateSelfIllumination(float4 material, float4 diffuse)
-{
-    return diffuse * material.b;
-}
+    // Directional lights
+    for (i = 0; i < directionalLightCount; ++i)
+    {
+        finalColor += calculateLight(diffuse, directionalLights[i].color, directionalLights[i].dir, normal, material);
+    }
 
-float4 calculateLighting(float4 diffuse, float3 normal, float4 material)
-{
-    float4 finalColor = calculateLight(diffuse, normal);
-    finalColor += calculateSpecular(material, normal);
-    //finalColor += calculateFresnel(material, normal);
-    finalColor += caculateSelfIllumination(material, diffuse);
+    // Self illumination
+    finalColor += diffuse * material.b;
 
     return finalColor;
 }

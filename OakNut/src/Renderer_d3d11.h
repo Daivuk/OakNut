@@ -17,12 +17,14 @@ namespace onut
     public:
         virtual ~Renderer_d3d11();
 
-        void onUpdate(const onut::TimeInfo& timeInfo) override;
         void onCreate() override;
-        void onDraw() override;
 
         void setCamera(Camera* pCamera) override;
-        void draw(Mesh* pMesh, Material* pMaterial, const glm::mat4& transform) override;
+        void draw(Mesh* pMesh,
+                  Material* pMaterial,
+                  const glm::mat4& transform,
+                  const std::vector<onut::PointLight*>& pointLights,
+                  const std::vector<onut::DirectionalLight*>& directionalLights) override;
 
         ID3D11Device* getDevice() const;
         ID3D11DeviceContext* getDeviceContext() const;
@@ -37,6 +39,9 @@ namespace onut
         void createProgram(const std::string& name, const std::vector<Mesh::eElement>& layout);
         void createConstantBuffers();
         void createStates();
+
+        void begin() override;
+        void end() override;
 
         struct cbMaterial
         {
@@ -53,6 +58,29 @@ namespace onut
             float cbView_padding;
         };
 
+        struct sPointLight
+        {
+            glm::vec3 position;
+            float radius;
+            glm::vec4 color;
+        };
+
+        struct sDirectionalLight
+        {
+            glm::vec3 dir;
+            float sDirectionalLight_padding;
+            glm::vec4 color;
+        };
+
+        struct cbLights
+        {
+            int32_t pointLightCount;
+            int32_t directionalLightCount;
+            glm::vec2 cbLights_padding1;
+            sPointLight pointLights[MAX_POINT_LIGHTS];
+            sDirectionalLight directionalLights[MAX_DIRECTIONAL_LIGHTS];
+        };
+
         // Device stuff
         IDXGISwapChain* m_pSwapChain = nullptr;
         ID3D11Device* m_pDevice = nullptr;
@@ -67,12 +95,14 @@ namespace onut
         ID3D11VertexShader* m_pCurrentVertexShader = nullptr;
         ID3D11PixelShader* m_pCurrentPixelShader = nullptr;
         ID3D11InputLayout* m_pCurrentInputLayout = nullptr;
+        Mesh* m_pCurrentMesh = nullptr;
 
         // Constant buffers
         ID3D11Buffer* m_pViewProjMatrixBuffer = nullptr;
         ID3D11Buffer* m_pModelMatrixBuffer = nullptr;
         ID3D11Buffer* m_pViewBuffer = nullptr;
         ID3D11Buffer* m_pMaterialBuffer = nullptr;
+        ID3D11Buffer* m_pLightsBuffer = nullptr;
 
         // Render states
         ID3D11DepthStencilState* m_pForwardDepthState = nullptr;

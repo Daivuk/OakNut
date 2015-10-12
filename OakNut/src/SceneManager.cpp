@@ -57,23 +57,6 @@ void onut::SceneManager::updateEntity(Entity* pEntity, const onut::TimeInfo& tim
     }
 }
 
-void onut::SceneManager::onDraw()
-{
-    drawEntity(m_pRootEntity);
-}
-
-void onut::SceneManager::drawEntity(Entity* pEntity)
-{
-    pEntity->onDraw();
-    for (auto pChild : pEntity->getChildren())
-    {
-        if (pChild->getVisible())
-        {
-            drawEntity(pChild);
-        }
-    }
-}
-
 void onut::SceneManager::removeNonPersist(Entity* pEntity)
 {
     //auto children = pEntity->getChildren();
@@ -115,4 +98,9 @@ void onut::SceneManager::loadSceneAsync(const std::string& filename)
             pDispatcher->release();
         });
     });
+}
+
+onut::Entity* onut::SceneManager::getRootEntity() const
+{
+    return m_pRootEntity;
 }

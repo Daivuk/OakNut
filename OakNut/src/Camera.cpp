@@ -6,15 +6,6 @@
 #include "Renderer.h"
 #include "Window.h"
 
-void onut::Camera::onUpdate(const onut::TimeInfo& timeInfo)
-{
-    if (getActive())
-    {
-        auto pRenderer = onut::Game::getGame()->getComponent<Renderer>();
-        pRenderer->setCamera(this);
-    }
-}
-
 glm::mat4 onut::Camera::getViewProj() const
 {
     glm::mat4 ret(1);

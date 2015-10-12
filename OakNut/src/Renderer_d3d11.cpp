@@ -1,9 +1,12 @@
 #if defined(ONUT_RENDERER_D3D11)
 #include "Camera.h"
 #include "ComponentManager.h"
+#include "DirectionalLight.h"
+#include "Entity.h"
 #include "InputLayoutFactory_d3d11.h"
 #include "Material.h"
 #include "Mesh_d3d11.h"
+#include "PointLight.h"
 #include "Renderer_d3d11.h"
 #include "SceneManager.h"
 #include "Texture_d3d11.h"
@@ -15,6 +18,7 @@
 
 onut::Renderer_d3d11::~Renderer_d3d11()
 {
+    if (m_pCurrentMesh) m_pCurrentMesh->release();
     if (m_pCurrentInputLayout) m_pCurrentInputLayout->Release();
     if (m_pInputLayoutFactory) delete m_pInputLayoutFactory;
     if (m_pCurrentVertexShader) m_pCurrentVertexShader->Release();
@@ -39,6 +43,7 @@ onut::Renderer_d3d11::~Renderer_d3d11()
     if (m_pModelMatrixBuffer) m_pModelMatrixBuffer->Release();
     if (m_pMaterialBuffer) m_pMaterialBuffer->Release();
     if (m_pViewBuffer) m_pViewBuffer->Release();
+    if (m_pLightsBuffer) m_pLightsBuffer->Release();
 
     if (m_pDepthStencilView) m_pDepthStencilView->Release();
     if (m_pRenderTargetView) m_pRenderTargetView->Release();
@@ -74,7 +79,7 @@ void onut::Renderer_d3d11::onCreate()
     m_pBlackTexture->setData(1, 1, &blackPixel);
 }
 
-void onut::Renderer_d3d11::onDraw()
+void onut::Renderer_d3d11::end()
 {
     m_pSwapChain->Present(1, 0);
 }
@@ -234,6 +239,13 @@ void onut::Renderer_d3d11::createConstantBuffers()
         auto ret = m_pDevice->CreateBuffer(&cbDesc, nullptr, &m_pMaterialBuffer);
         assert(ret == S_OK);
     }
+
+    // Lights
+    {
+        D3D11_BUFFER_DESC cbDesc = CD3D11_BUFFER_DESC(sizeof(cbLights), D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
+        auto ret = m_pDevice->CreateBuffer(&cbDesc, nullptr, &m_pLightsBuffer);
+        assert(ret == S_OK);
+    }
 }
 
 void onut::Renderer_d3d11::createStates()
@@ -375,7 +387,7 @@ void onut::Renderer_d3d11::getProgramForLayout(const std::vector<Mesh::eElement>
     *ppPixelShader = nullptr;
 }
 
-void onut::Renderer_d3d11::onUpdate(const onut::TimeInfo& timeInfo)
+void onut::Renderer_d3d11::begin()
 {
     // Bind the render target view and depth stencil buffer to the output render pipeline.
     m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
@@ -405,7 +417,11 @@ void onut::Renderer_d3d11::onUpdate(const onut::TimeInfo& timeInfo)
     m_pDeviceContext->PSSetSamplers(0, 1, &m_pForwardSamplerState);
 }
 
-void onut::Renderer_d3d11::draw(Mesh* pMesh, Material* pMaterial, const glm::mat4& transform)
+void onut::Renderer_d3d11::draw(Mesh* pMesh,
+                                Material* pMaterial,
+                                const glm::mat4& transform,
+                                const std::vector<onut::PointLight*>& pointLights,
+                                const std::vector<onut::DirectionalLight*>& directionalLights)
 {
     // Some validation
     if (!pMaterial) return;
@@ -423,6 +439,33 @@ void onut::Renderer_d3d11::draw(Mesh* pMesh, Material* pMaterial, const glm::mat
     if (!pVertexShader) return;
     auto pPixelShader = pMesh_d3d11->getPixelShader();
     if (!pPixelShader) return;
+
+    // Set up lights
+    {
+        D3D11_MAPPED_SUBRESOURCE map;
+        m_pDeviceContext->Map(m_pLightsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+
+        auto &lights = *(cbLights*)map.pData;
+        lights.pointLightCount = static_cast<int32_t>(pointLights.size());
+        for (int32_t i = 0; i < lights.pointLightCount && i < MAX_POINT_LIGHTS; ++i)
+        {
+            auto pLightEntity = dynamic_cast<Entity*>(pointLights[i]->getComponentManager());
+            lights.pointLights[i].position = pLightEntity->getPosition();
+            lights.pointLights[i].radius = pointLights[i]->getRadius();
+            lights.pointLights[i].color = pointLights[i]->getColor();
+        }
+
+        lights.directionalLightCount = static_cast<int32_t>(directionalLights.size());
+        for (int32_t i = 0; i < lights.directionalLightCount && i < MAX_DIRECTIONAL_LIGHTS; ++i)
+        {
+            auto pLightEntity = dynamic_cast<Entity*>(directionalLights[i]->getComponentManager());
+            lights.directionalLights[i].dir = -glm::vec3(pLightEntity->getWorldMatrix()[1]);
+            lights.directionalLights[i].color = directionalLights[i]->getColor();
+        }
+
+        m_pDeviceContext->Unmap(m_pLightsBuffer, 0);
+        m_pDeviceContext->PSSetConstantBuffers(2, 1, &m_pLightsBuffer);
+    }
 
     // Set it's matrix
     {
@@ -474,33 +517,40 @@ void onut::Renderer_d3d11::draw(Mesh* pMesh, Material* pMaterial, const glm::mat
     m_pDeviceContext->PSSetShaderResources(0, 3, pResourceViews);
 
     // Bind program
-    if (m_pCurrentInputLayout != pInputLayout)
+    if (pMesh != m_pCurrentMesh)
     {
-        if (m_pCurrentInputLayout) m_pCurrentInputLayout->Release();
-        m_pCurrentInputLayout = pInputLayout;
-        m_pCurrentInputLayout->AddRef();
-        m_pDeviceContext->IASetInputLayout(m_pCurrentInputLayout);
-    }
-    if (m_pCurrentVertexShader != pVertexShader)
-    {
-        if (m_pCurrentVertexShader) m_pCurrentVertexShader->Release();
-        m_pCurrentVertexShader = pVertexShader;
-        m_pCurrentVertexShader->AddRef();
-        m_pDeviceContext->VSSetShader(m_pCurrentVertexShader, nullptr, 0);
-    }
-    if (m_pCurrentPixelShader != pPixelShader)
-    {
-        if (m_pCurrentPixelShader) m_pCurrentPixelShader->Release();
-        m_pCurrentPixelShader = pPixelShader;
-        m_pCurrentPixelShader->AddRef();
-        m_pDeviceContext->PSSetShader(m_pCurrentPixelShader, nullptr, 0);
-    }
+        if (m_pCurrentMesh) m_pCurrentMesh->release();
+        m_pCurrentMesh = pMesh;
+        m_pCurrentMesh->retain();
 
-    // Draw using the mesh buffers
-    UINT stride = static_cast<UINT>(pMesh_d3d11->getStride());
-    UINT offset = 0;
-    m_pDeviceContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride, &offset);
-    m_pDeviceContext->IASetIndexBuffer(pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+        if (m_pCurrentInputLayout != pInputLayout)
+        {
+            if (m_pCurrentInputLayout) m_pCurrentInputLayout->Release();
+            m_pCurrentInputLayout = pInputLayout;
+            m_pCurrentInputLayout->AddRef();
+            m_pDeviceContext->IASetInputLayout(m_pCurrentInputLayout);
+        }
+        if (m_pCurrentVertexShader != pVertexShader)
+        {
+            if (m_pCurrentVertexShader) m_pCurrentVertexShader->Release();
+            m_pCurrentVertexShader = pVertexShader;
+            m_pCurrentVertexShader->AddRef();
+            m_pDeviceContext->VSSetShader(m_pCurrentVertexShader, nullptr, 0);
+        }
+        if (m_pCurrentPixelShader != pPixelShader)
+        {
+            if (m_pCurrentPixelShader) m_pCurrentPixelShader->Release();
+            m_pCurrentPixelShader = pPixelShader;
+            m_pCurrentPixelShader->AddRef();
+            m_pDeviceContext->PSSetShader(m_pCurrentPixelShader, nullptr, 0);
+        }
+
+        // Draw using the mesh buffers
+        UINT stride = static_cast<UINT>(pMesh_d3d11->getStride());
+        UINT offset = 0;
+        m_pDeviceContext->IASetVertexBuffers(0, 1, &pVertexBuffer, &stride, &offset);
+        m_pDeviceContext->IASetIndexBuffer(pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+    }
     m_pDeviceContext->DrawIndexed(count, 0, 0);
 }
 

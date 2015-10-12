@@ -14,16 +14,16 @@ namespace onut
         void loadScene(const std::string& filename);
         void loadSceneAsync(const std::string& filename);
 
+        Entity* getRootEntity() const;
+
         void onCreate() override;
         void onUpdate(const onut::TimeInfo& timeInfo) override;
-        void onDraw() override;
 
         PROPERTY(std::string, StartupScene, "");
 
     private:
         void createEntity(Entity* pEntity);
         void updateEntity(Entity* pEntity, const onut::TimeInfo& timeInfo);
-        void drawEntity(Entity* pEntity);
         void removeNonPersist(Entity* pEntity);
 
         Entity* m_pRootEntity = nullptr;

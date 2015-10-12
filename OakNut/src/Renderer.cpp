@@ -1,9 +1,110 @@
+#include "Camera.h"
+#include "ComponentManager.h"
+#include "DirectionalLight.h"
+#include "Entity.h"
+#include "MeshRenderer.h"
+#include "PointLight.h"
 #include "Renderer.h"
+#include "SceneManager.h"
 
 onut::Renderer::Renderer()
 {
+    m_solids.reserve(4096); // This will grow automatically anyway
+    m_pointLights.reserve(1024);
+    m_pointLightsPassThrough.reserve(MAX_POINT_LIGHTS);
 }
 
 onut::Renderer::~Renderer()
 {
+}
+
+void onut::Renderer::onDraw()
+{
+    auto pComponentManager = getComponentManager();
+    if (!pComponentManager) return;
+    auto pSceneManager = pComponentManager->getComponent<SceneManager>();
+    if (!pSceneManager) return;
+    auto pRootNode = pSceneManager->getRootEntity();
+    if (!pRootNode) return;
+
+    // This will clear buffers and initialize the frame
+    begin();
+
+    // Find all renderables
+    m_solids.clear();
+    m_pointLights.clear();
+    m_directionalLights.clear();
+    m_pCamera = nullptr;
+    collectRenderable(pRootNode);
+
+    // Set camera
+    setCamera(m_pCamera);
+
+    // Draw solids
+    for (auto& renderAction : m_solids)
+    {
+        if (!renderAction.pMesh || !renderAction.pMaterial || !renderAction.pTransform) continue;
+
+        // Setup lights
+        m_pointLightsPassThrough.clear();
+        for (auto pPointLight : m_pointLights)
+        {
+            m_pointLightsPassThrough.push_back(pPointLight);
+        }
+        m_directionalLightsPassThrough.clear();
+        for (auto pDirectionalLight : m_directionalLights)
+        {
+            m_directionalLightsPassThrough.push_back(pDirectionalLight);
+        }
+
+        // Draw
+        draw(renderAction.pMesh, renderAction.pMaterial, *renderAction.pTransform, m_pointLightsPassThrough, m_directionalLightsPassThrough);
+    }
+
+    // Draw transparents
+
+    // Swap the buffers
+    end();
+}
+
+void onut::Renderer::collectRenderable(Entity* pEntity)
+{
+    if (!pEntity) return;
+    if (!pEntity->getVisible()) return;
+
+    // Add mesh
+    auto pMeshRenderer = pEntity->getComponent<MeshRenderer>();
+    if (pMeshRenderer)
+    {
+        if (!pMeshRenderer->getMesh() || !pMeshRenderer->getMaterial()) return;
+        m_solids.push_back({pMeshRenderer->getMesh(), pMeshRenderer->getMaterial(), &pEntity->getWorldMatrix()});
+    }
+
+    // Select active camera
+    auto pCamera = pEntity->getComponent<Camera>();
+    if (pCamera)
+    {
+        if (pCamera->getActive())
+        {
+            m_pCamera = pCamera;
+        }
+    }
+
+    // Add light
+    auto pPointLight = pEntity->getComponent<PointLight>();
+    if (pPointLight)
+    {
+        m_pointLights.push_back(pPointLight);
+    }
+    auto pDirectionalLight = pEntity->getComponent<DirectionalLight>();
+    if (pDirectionalLight)
+    {
+        m_directionalLights.push_back(pDirectionalLight);
+    }
+
+    // Check children
+    for (auto pChild : pEntity->getChildren())
+    {
+        collectRenderable(pChild);
+    }
 }

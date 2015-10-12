@@ -9,6 +9,7 @@ Texture2D materialMapTexture : register(t2);
 struct sInput
 {
     float4 position : SV_POSITION;
+    float4 worldPos : POSITION;
     float3 normal   : NORMAL;
     float3 tangent  : TANGENT;
     float3 binormal : BINORMAL;
@@ -28,5 +29,5 @@ float4 main(sInput input) : SV_TARGET
         normalMap.y * input.binormal + 
         normalMap.z * input.normal);
 
-    return calculateLighting(diffuse, normal, materialMap);
+    return calculateLighting(input.worldPos.xyz, diffuse, normal, materialMap);
 }
