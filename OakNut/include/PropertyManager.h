@@ -1,4 +1,6 @@
 #pragma once
+#include "ObjectVector.h"
+
 #include "glm/glm.hpp"
 #include "json/json.h"
 
@@ -35,6 +37,17 @@ namespace onut
     private: \
         __type__* m_p ## __name__ = __defaultValue__; \
         bool m_ ## __name__ ## IsDefault = registerProperty(#__name__, &m_p ## __name__); \
+        struct s ## __name__ ## Destructor \
+        { \
+            s ## __name__ ## Destructor(__type__** ppIn ## __name__) \
+                : pp ## __name__(ppIn ## __name__) {} \
+            virtual ~s ## __name__ ## Destructor() \
+            { \
+                if (*pp ## __name__) (*pp ## __name__)->release(); \
+            } \
+            __type__** pp ## __name__; \
+        }; \
+        s ## __name__ ## Destructor m_ ## __name__ ## Destructor = s ## __name__ ## Destructor(&m_p ## __name__); \
     public: \
         __type__* get ## __name__() const {return m_p ## __name__;} \
         void set ## __name__(__type__* pValue) \
@@ -44,6 +57,7 @@ namespace onut
             if (m_p ## __name__) m_p ## __name__->release(); \
             m_p ## __name__ = pValue; \
         }
+
 #define PROPERTY_NOSETTER(__type__, __name__, __defaultValue__) \
     private: \
         __type__ m_ ## __name__ = __defaultValue__; \
@@ -65,6 +79,8 @@ namespace onut
 
         bool loadPropertiesFromFile(const std::string& filename);
         bool loadPropertiesFromJson(const Json::Value& json);
+
+        bool removeWeakReferences(onut::Object* pObjectToDereference);
 
     protected:
         template<typename Ttype> bool registerProperty(const std::string& name, Ttype* pVar);
@@ -102,8 +118,8 @@ namespace onut
         static SPropertyLink make_property(glm::vec3 *pVar) { return{ePropertyType::P_VEC3, pVar}; }
         static SPropertyLink make_property(glm::vec4 *pVar) { return{ePropertyType::P_VEC4, pVar}; }
         static SPropertyLink make_property(Entity **pVar) { return{ePropertyType::P_ENTITY, pVar}; }
-        static SPropertyLink make_property(std::vector<Entity*> *pVar) { return{ePropertyType::P_ENTITY_ARRAY, pVar}; }
-        static SPropertyLink make_property(std::vector<Component*> *pVar) { return{ePropertyType::P_COMPONENT_ARRAY, pVar}; }
+        static SPropertyLink make_property(ObjectVector<Entity> *pVar) { return{ePropertyType::P_ENTITY_ARRAY, pVar}; }
+        static SPropertyLink make_property(ObjectVector<Component> *pVar) { return{ePropertyType::P_COMPONENT_ARRAY, pVar}; }
         static SPropertyLink make_property(Material **pVar) { return{ePropertyType::P_MATERIAL, (void*)pVar}; }
         static SPropertyLink make_property(Mesh **pVar) { return{ePropertyType::P_MESH, (void*)pVar}; }
         static SPropertyLink make_property(Texture **pVar) { return{ePropertyType::P_TEXTURE, (void*)pVar}; }

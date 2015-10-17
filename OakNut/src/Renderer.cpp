@@ -35,6 +35,15 @@ void onut::Renderer::onDraw()
     m_pointLights.clear();
     m_directionalLights.clear();
     m_pCamera = nullptr;
+    pRootNode->visit([this](Entity* pEntity)
+    {
+        if (pEntity->getVisible())
+        {
+            collectRenderable(pEntity);
+            return true;
+        }
+        return false;
+    });
     collectRenderable(pRootNode);
 
     // Set camera
@@ -69,9 +78,6 @@ void onut::Renderer::onDraw()
 
 void onut::Renderer::collectRenderable(Entity* pEntity)
 {
-    if (!pEntity) return;
-    if (!pEntity->getVisible()) return;
-
     // Add mesh
     auto pMeshRenderer = pEntity->getComponent<MeshRenderer>();
     if (pMeshRenderer)
@@ -100,11 +106,5 @@ void onut::Renderer::collectRenderable(Entity* pEntity)
     if (pDirectionalLight)
     {
         m_directionalLights.push_back(pDirectionalLight);
-    }
-
-    // Check children
-    for (auto pChild : pEntity->getChildren())
-    {
-        collectRenderable(pChild);
     }
 }

@@ -14,8 +14,8 @@ namespace onut
     class Renderer : public Component
     {
     public:
-        static const int32_t MAX_POINT_LIGHTS = 4;
-        static const int32_t MAX_DIRECTIONAL_LIGHTS = 2;
+        static const int32_t MAX_POINT_LIGHTS = 8;
+        static const int32_t MAX_DIRECTIONAL_LIGHTS = 1;
 
         Renderer();
         virtual ~Renderer();

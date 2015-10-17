@@ -40,34 +40,52 @@ const glm::mat4& onut::Entity::getWorldMatrix()
 
 bool onut::Entity::add(Entity* pEntity)
 {
-    for (auto &pEntityOther : m_Children)
-    {
-        if (pEntityOther == pEntity) return false;
-    }
-    pEntity->retain();
+    if (m_Children.contains(pEntity)) return false;
     m_Children.push_back(pEntity);
+    pEntity->m_pParent = this;
     return true;
 }
 
 bool onut::Entity::remove(Entity* pEntity)
 {
-    for (auto it = m_Children.begin(); it != m_Children.end(); ++it)
-    {
-        if (*it == pEntity)
-        {
-            m_Children.erase(it);
-            pEntity->release();
-            return true;
-        }
-    }
-    return false;
+    if (!pEntity) return false;
+    if (pEntity->m_pParent != this) return false;
+    pEntity->m_pParent = nullptr;
+    return m_Children.release(pEntity);
+}
+
+bool onut::Entity::removeFromParent()
+{
+    if (!m_pParent) return false;
+    return m_pParent->remove(this);
 }
 
 void onut::Entity::setMatrixDirty(Entity* pEntity)
 {
-    pEntity->m_isMatrixDirty = true;
-    for (auto it = pEntity->m_Children.begin(); it != pEntity->m_Children.end(); ++it)
+    pEntity->visit([](Entity* pEntity)
     {
-        setMatrixDirty(*it);
-    }
+        pEntity->m_isMatrixDirty = true;
+        return true;
+    });
+}
+
+void onut::Entity::onCreate()
+{
+    retain();
+    ComponentManager::onCreate();
+    release();
+}
+
+void onut::Entity::onUpdate(const onut::TimeInfo& timeInfo)
+{
+    retain();
+    ComponentManager::onUpdate(timeInfo);
+    release();
+}
+
+void onut::Entity::onDraw()
+{
+    retain();
+    ComponentManager::onDraw();
+    release();
 }

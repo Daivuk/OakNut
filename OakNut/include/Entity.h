@@ -14,6 +14,10 @@ namespace onut
         Entity(const Entity& other);
         virtual ~Entity();
 
+        virtual void onCreate();
+        virtual void onUpdate(const onut::TimeInfo& timeInfo);
+        virtual void onDraw();
+
         const glm::mat4& getLocalMatrix() const;
         const glm::mat4& getWorldMatrix();
 
@@ -22,6 +26,23 @@ namespace onut
 
         bool add(Entity* pEntity);
         bool remove(Entity* pEntity);
+        bool removeFromParent();
+
+        template<typename TLambda, typename ... TArgs>
+        void visit(const TLambda& lambda, TArgs ... args)
+        {
+            if (lambda(this, args...))
+            {
+                for (decltype(m_Children.size()) i = 0; i < m_Children.size(); ++i)
+                {
+                    auto pChild = m_Children[i];
+                    if (pChild)
+                    {
+                        pChild->visit(lambda, args...);
+                    }
+                }
+            }
+        }
 
     private:
         PROPERTY(bool, Enabled, true);
@@ -29,7 +50,7 @@ namespace onut
         PROPERTY_DIRTY(glm::vec3, Position, glm::vec3(0, 0, 0), setMatrixDirty);
         PROPERTY_DIRTY(glm::vec3, Rotation, glm::vec3(0, 0, 0), setMatrixDirty);
         PROPERTY_DIRTY(glm::vec3, Scale, glm::vec3(1, 1, 1), setMatrixDirty);
-        PROPERTY_NOSETTER(std::vector<Entity*>, Children, std::vector<Entity*>());
+        PROPERTY_NOSETTER(onut::ObjectVector<Entity>, Children, onut::ObjectVector<Entity>());
         PROPERTY(std::string, Name, "Entity");
         PROPERTY(bool, Persist, false);
 

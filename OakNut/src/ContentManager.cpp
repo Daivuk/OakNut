@@ -25,6 +25,7 @@ bool onut::ContentManager::addResource(const std::string& name, Resource* pResou
     }
     auto &res = m_resources[name];
     ++res.refCount;
+    pResource->retain();
     res.pResource = pResource;
     return true;
 }

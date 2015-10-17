@@ -31,42 +31,56 @@ void onut::SceneManager::onUpdate(const onut::TimeInfo& timeInfo)
             loadScene(getStartupScene());
         }
     }
-    createEntity(m_pRootEntity);
     updateEntity(m_pRootEntity, timeInfo);
-}
-
-void onut::SceneManager::createEntity(Entity* pEntity)
-{
-    pEntity->onCreate();
-    for (auto pChild : pEntity->getChildren())
-    {
-        createEntity(pChild);
-    }
 }
 
 void onut::SceneManager::updateEntity(Entity* pEntity, const onut::TimeInfo& timeInfo)
 {
-    pEntity->onUpdate(timeInfo);
-    for (auto pChild : pEntity->getChildren())
+    m_pRootEntity->visit([](Entity* pEntity)
     {
-        if (pChild->getEnabled() &&
-            pChild->getVisible())
+        pEntity->onCreate();
+        return true;
+    });
+    m_pRootEntity->visit([&timeInfo](Entity* pEntity)
+    {
+        if (pEntity->getEnabled() && pEntity->getVisible())
         {
-            updateEntity(pChild, timeInfo);
+            pEntity->onUpdate(timeInfo);
+            return true;
         }
-    }
+        return false;
+    });
+}
+
+void onut::SceneManager::removeWeakReferences(Entity* pToDereference)
+{
+    m_pRootEntity->visit([pToDereference](Entity* pEntity)
+    {
+        pEntity->removeWeakReferences(pToDereference);
+        return true;
+    });
 }
 
 void onut::SceneManager::removeNonPersist(Entity* pEntity)
 {
-    //auto children = pEntity->getChildren();
-    //for (auto pChild : children)
-    //{
-    //    if (!pChild->getPersist())
-    //    {
-    //        Entity::destroy(
-    //    }
-    //}
+    m_pRootEntity->visit([this](Entity* pEntity)
+    {
+        if (pEntity->getPersist())
+        {
+            return false;
+        }
+        removeWeakReferences(pEntity);
+        return true;
+    });
+    m_pRootEntity->visit([this](Entity* pEntity)
+    {
+        if (!pEntity->getPersist())
+        {
+            pEntity->removeFromParent();
+            return false;
+        }
+        return true;
+    });
 }
 
 void onut::SceneManager::loadScene(const std::string& filename)

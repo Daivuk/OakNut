@@ -62,6 +62,7 @@
     <ClInclude Include="include\Mesh.h" />
     <ClInclude Include="include\MeshRenderer.h" />
     <ClInclude Include="include\Object.h" />
+    <ClInclude Include="include\ObjectVector.h" />
     <ClInclude Include="include\PointLight.h" />
     <ClInclude Include="include\PropertyManager.h" />
     <ClInclude Include="include\Resource.h" />

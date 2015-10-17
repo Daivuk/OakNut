@@ -14,6 +14,49 @@ onut::PropertyManager::~PropertyManager()
 {
 }
 
+bool onut::PropertyManager::removeWeakReferences(onut::Object* pObjectToDereference)
+{
+    if (!pObjectToDereference) return false;
+    bool bRet = false;
+    for (auto& property : m_properties)
+    {
+        auto & propertyLink = property.second;
+        switch (propertyLink.type)
+        {
+            case ePropertyType::P_ENTITY:
+            case ePropertyType::P_MATERIAL:
+            case ePropertyType::P_MESH:
+            case ePropertyType::P_TEXTURE:
+            {
+                auto ppObject = (onut::Object**)propertyLink.pProperty;
+                auto pObject = *ppObject;
+                if (pObject == pObjectToDereference)
+                {
+                    pObject->release();
+                    *ppObject = nullptr;
+                    bRet = true;
+                }
+                break;
+            }
+            case ePropertyType::P_ENTITY_ARRAY:
+            {
+                auto pVector = (ObjectVector<Entity>*)propertyLink.pProperty;
+                bRet |= pVector->release(dynamic_cast<Entity*>(pObjectToDereference));
+                break;
+            }
+            case ePropertyType::P_COMPONENT_ARRAY:
+            {
+                auto pVector = (ObjectVector<Component>*)propertyLink.pProperty;
+                bRet |= pVector->release(dynamic_cast<Component*>(pObjectToDereference));
+                break;
+            }
+            default:
+                break;
+        }
+    }
+    return bRet;
+}
+
 bool onut::PropertyManager::loadPropertiesFromFile(const std::string& filename)
 {
     std::ifstream fic(filename);
@@ -126,7 +169,7 @@ bool onut::PropertyManager::loadPropertiesFromJson(const Json::Value& json)
                 if (jsonElement.isArray())
                 {
                     auto pMyEntity = dynamic_cast<Entity*>(this);
-                    auto pEntities = static_cast<std::vector<onut::Entity*>*>(propertyLink.pProperty);
+                    auto pEntities = static_cast<ObjectVector<Entity>*>(propertyLink.pProperty);
                     for (auto &jsonEntity : jsonElement)
                     {
                         if (jsonEntity.isObject())
@@ -136,7 +179,14 @@ bool onut::PropertyManager::loadPropertiesFromJson(const Json::Value& json)
                                 auto pEntity = new onut::Entity();
                                 pEntity->retain();
                                 pEntity->loadPropertiesFromJson(jsonEntity);
-                                pMyEntity->add(pEntity);
+                                if (pEntities == &pMyEntity->getChildren())
+                                {
+                                    pMyEntity->add(pEntity);
+                                }
+                                else
+                                {
+                                    pEntities->push_back(pEntity);
+                                }
                                 pEntity->release();
                             }
                             else
@@ -151,7 +201,7 @@ bool onut::PropertyManager::loadPropertiesFromJson(const Json::Value& json)
                 if (jsonElement.isArray())
                 {
                     auto pComponentManager = dynamic_cast<ComponentManager*>(this);
-                    auto pComponents = static_cast<std::vector<onut::Component*>*>(propertyLink.pProperty);
+                    auto pComponents = static_cast<ObjectVector<Component>*>(propertyLink.pProperty);
                     for (auto &jsonComponent : jsonElement)
                     {
                         if (jsonComponent.isArray() &&
@@ -166,7 +216,7 @@ bool onut::PropertyManager::loadPropertiesFromJson(const Json::Value& json)
                             if (!pComponent) continue;
                             pComponent->loadPropertiesFromJson(jsonComponent[1]);
                             pComponent->retain();
-                            if (pComponentManager)
+                            if (pComponentManager && pComponents == &pComponentManager->getComponents())
                             {
                                 pComponentManager->addComponent(pComponent);
                                 pComponent->release();

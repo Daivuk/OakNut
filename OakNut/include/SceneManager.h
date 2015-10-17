@@ -22,9 +22,9 @@ namespace onut
         PROPERTY(std::string, StartupScene, "");
 
     private:
-        void createEntity(Entity* pEntity);
         void updateEntity(Entity* pEntity, const onut::TimeInfo& timeInfo);
         void removeNonPersist(Entity* pEntity);
+        void removeWeakReferences(Entity* pToDereference);
 
         Entity* m_pRootEntity = nullptr;
         bool m_bFirstSceneLoaded = false;

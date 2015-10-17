@@ -27,8 +27,8 @@ struct sDirectionalLight
     float4 color;
 };
 
-static const int MAX_POINT_LIGHTS = 4;
-static const int MAX_DIRECTIONAL_LIGHTS = 2;
+static const int MAX_POINT_LIGHTS = 8;
+static const int MAX_DIRECTIONAL_LIGHTS = 1;
 
 cbuffer cbLights : register(b2)
 {

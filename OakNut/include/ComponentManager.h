@@ -1,8 +1,7 @@
 #pragma once
+#include "ObjectVector.h"
 #include "PropertyManager.h"
 #include "TimeInfo.h"
-
-#include <vector>
 
 namespace onut
 {
@@ -34,11 +33,11 @@ namespace onut
         bool removeAllComponents();
 
         // Getters
-        template<typename Tcomponent> Tcomponent* getComponent() const;
-        bool hasComponent(Component* pComponent);
+        template<typename Tcomponent> Tcomponent* getComponent();
+        bool hasComponent(Component* pComponent) const;
 
     private:
-        PROPERTY(std::vector<Component*>, Components, std::vector<Component*>());
+        PROPERTY_NOSETTER(ObjectVector<Component>, Components, ObjectVector<Component>());
     };
 
     template<typename Tcomponent> 
@@ -75,7 +74,7 @@ namespace onut
     }
 
     template<typename Tcomponent>
-    inline Tcomponent* ComponentManager::getComponent() const
+    inline Tcomponent* ComponentManager::getComponent()
     {
         for (auto pComponent : m_Components)
         {
