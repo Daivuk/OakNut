@@ -36,7 +36,7 @@ float4 calculateLight(float4 diffuse, float4 lightColor, float3 lightDir, float3
 {
     // Light dot
     float lightDot = saturate(dot(normal, lightDir));
-    float4 finalColor = diffuse * lightColor * lightDot;
+    float4 finalColor = diffuse * lightColor * lightDot * lightColor.a;
 
     // Specular
     float3 h = normalize(lightDir - viewDir);
@@ -71,6 +71,9 @@ float4 calculateLighting(float3 worldPos, float4 diffuse, float3 normal, float4 
     {
         finalColor += calculateLight(diffuse, directionalLights[i].color, directionalLights[i].dir, normal, material);
     }
+
+    // Ambient
+    finalColor += diffuse * ambientColor * ambientColor.a;
 
     // Self illumination
     finalColor += diffuse * material.b;

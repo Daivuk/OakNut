@@ -25,6 +25,8 @@ namespace onut
         virtual void onUpdate(const onut::TimeInfo& timeInfo) {}
         virtual void onDraw() {}
 
+        template<typename Tcomponent> Tcomponent* getComponent();
+
     private:
         friend class ComponentManager;
 
@@ -35,4 +37,11 @@ namespace onut
         bool m_created = false;
         ComponentManager* m_pComponentManager = nullptr;
     };
+
+    template<typename Tcomponent>
+    inline Tcomponent* Component::getComponent()
+    {
+        if (!m_pComponentManager) return nullptr;
+        return m_pComponentManager->getComponent<Tcomponent>();
+    }
 }

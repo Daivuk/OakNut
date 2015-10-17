@@ -1,6 +1,7 @@
 #include "Camera.h"
 #include "ContentManager.h"
 #include "DirectionalLight.h"
+#include "AmbientLight.h"
 #include "Dispatcher.h"
 #include "EntityFactory.h"
 #include "Game.h"
@@ -18,19 +19,20 @@
 void onut::Main::main()
 {
     // Register classes to be loaded dynamically
-    ObjectLibrary::registerObject<Camera>("Camera");
-    ObjectLibrary::registerObject<ContentManager>("ContentManager");
-    ObjectLibrary::registerObject<DirectionalLight>("DirectionalLight");
-    ObjectLibrary::registerObject<Dispatcher>("Dispatcher");
-    ObjectLibrary::registerObject<MeshRenderer>("MeshRenderer");
-    ObjectLibrary::registerObject<PointLight>("PointLight");
-    ObjectLibrary::registerObject<SceneManager>("SceneManager");
-    ObjectLibrary::registerObject<Timing>("Timing");
+    REG_COMPONENT(AmbientLight);
+    REG_COMPONENT(Camera);
+    REG_COMPONENT(ContentManager);
+    REG_COMPONENT(DirectionalLight);
+    REG_COMPONENT(Dispatcher);
+    REG_COMPONENT(MeshRenderer);
+    REG_COMPONENT(PointLight);
+    REG_COMPONENT(SceneManager);
+    REG_COMPONENT(Timing);
 #if defined(ONUT_RENDERER_D3D11)
-    ObjectLibrary::registerObject<Renderer_d3d11>("Renderer");
+    REG_COMPONENT2(Renderer_d3d11, Renderer);
 #endif
 #if defined(WIN32)
-    ObjectLibrary::registerObject<Window_win>("Window");
+    REG_COMPONENT2(Window_win, Window);
 #endif
 
     auto pGame = Game::CreateGame();

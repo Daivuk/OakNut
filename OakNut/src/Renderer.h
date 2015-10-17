@@ -26,6 +26,7 @@ namespace onut
         virtual void draw(Mesh* pMesh, 
                           Material* pMaterial, 
                           const glm::mat4& transform, 
+                          const glm::vec4& ambientColor,
                           const std::vector<onut::PointLight*>& pointLights,
                           const std::vector<onut::DirectionalLight*>& directionalLights) = 0;
 
@@ -47,6 +48,7 @@ namespace onut
         std::vector<onut::PointLight*> m_pointLightsPassThrough;
         std::vector<onut::DirectionalLight*> m_directionalLights;
         std::vector<onut::DirectionalLight*> m_directionalLightsPassThrough;
+        glm::vec4 m_ambientColor;
         Camera* m_pCamera = nullptr;
     };
 }

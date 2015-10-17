@@ -23,6 +23,7 @@ namespace onut
         void draw(Mesh* pMesh,
                   Material* pMaterial,
                   const glm::mat4& transform,
+                  const glm::vec4& ambientColor,
                   const std::vector<onut::PointLight*>& pointLights,
                   const std::vector<onut::DirectionalLight*>& directionalLights) override;
 
@@ -77,6 +78,7 @@ namespace onut
             int32_t pointLightCount;
             int32_t directionalLightCount;
             glm::vec2 cbLights_padding1;
+            glm::vec4 ambientColor;
             sPointLight pointLights[MAX_POINT_LIGHTS];
             sDirectionalLight directionalLights[MAX_DIRECTIONAL_LIGHTS];
         };

@@ -85,15 +85,18 @@
   <ItemGroup>
     <ClCompile Include="src\Rotate.cpp" />
     <ClCompile Include="src\Sample.cpp" />
+    <ClCompile Include="src\Torch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Rotate.h" />
     <ClInclude Include="src\Sample.h" />
+    <ClInclude Include="src\Torch.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\game.json" />
     <None Include="assets\materials\crate.material" />
     <None Include="assets\materials\cratePurple.material" />
+    <None Include="assets\materials\floor.material" />
     <None Include="assets\materials\ogre.material" />
     <None Include="assets\materials\sphere.material" />
     <None Include="assets\materials\spherePurple.material" />

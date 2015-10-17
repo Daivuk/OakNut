@@ -2,6 +2,9 @@
 #include <unordered_map>
 #include <string>
 
+#define REG_COMPONENT(__class__) onut::ObjectLibrary::registerObject<__class__>(#__class__)
+#define REG_COMPONENT2(__class__, __name__) onut::ObjectLibrary::registerObject<__class__>(#__name__)
+
 namespace onut
 {
     class Object;

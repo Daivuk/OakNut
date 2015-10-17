@@ -3,8 +3,9 @@
   "Children": [
     {
       "Name": "Camera",
-      "Position": [ 0, -5, 3.5 ],
-      "Rotation": [ -30, 0, 0 ],
+      "Fov": 50,
+      "Position": [ -2, -1, 7 ],
+      "Rotation": [ -60, 0, 30 ],
       "Components": [
         [
           "Camera",
@@ -16,20 +17,76 @@
     },
     {
       "Name": "Torch",
-      "Position": [ 0, -3, 0 ],
+      "Position": [ 0, 7, 1.7 ],
       "Components": [
         [
           "PointLight",
           {
-            "Radius": 6,
+            "Radius": 4,
             "Color": [ 2, 1.5, 1, 1 ]
+          }
+        ],
+        [ "Torch", { } ]
+      ]
+    },
+    {
+      "Name": "Torch",
+      "Position": [ -6, 7, 1.7 ],
+      "Components": [
+        [
+          "PointLight",
+          {
+            "Radius": 4,
+            "Color": [ 2, 1.5, 1, 1 ]
+          }
+        ],
+        [ "Torch", { } ]
+      ]
+    },
+    {
+      "Name": "Torch",
+      "Position": [ 0, -1, 1.7 ],
+      "Components": [
+        [
+          "PointLight",
+          {
+            "Radius": 4,
+            "Color": [ 2, 1.5, 1, 1 ]
+          }
+        ],
+        [ "Torch", { } ]
+      ]
+    },
+    {
+      "Name": "Torch",
+      "Position": [ -6, -1, 1.7 ],
+      "Components": [
+        [
+          "PointLight",
+          {
+            "Radius": 4,
+            "Color": [ 2, 1.5, 1, 1 ]
+          }
+        ],
+        [ "Torch", { } ]
+      ]
+    },
+    {
+      "Name": "Player Light",
+      "Position": [ -3, 3, 1.5 ],
+      "Components": [
+        [
+          "PointLight",
+          {
+            "Radius": 8,
+            "Color": [ 1, 1, 1, 0.5 ]
           }
         ]
       ]
     },
-    {
+    /* {
       "Name": "Purple Light",
-      "Position": [ -3, -2, -3 ],
+      "Position": [ -3, -2, 3 ],
       "Components": [
         [
           "PointLight",
@@ -39,8 +96,8 @@
           }
         ]
       ]
-    },
-    {
+    },*/
+    /* {
       "Name": "Moon Light",
       "Rotation": [ -135, 0, 0 ],
       "Components": [
@@ -51,236 +108,19 @@
           }
         ]
       ]
-    },
+    },*/
     {
-      "Name": "Ogre",
-      "Position": [ -6, 0, -6 ],
+      "Name": "Ambient Light",
       "Components": [
         [
-          "MeshRenderer",
+          "AmbientLight",
           {
-            "Mesh": "meshes/ogre.mesh",
-            "Material": "materials/ogre.material"
-          }
-        ],
-        [
-          "Rotate",
-          {
-            "Speed": 45
+            "Color": [ 0.25, 0.5, 1, 0.25 ]
           }
         ]
       ]
     },
-    {
-      "Name": "Ogre",
-      "Position": [ -3, 0, -6 ],
-      "Components": [
-        [
-          "MeshRenderer",
-          {
-            "Mesh": "meshes/ogre.mesh",
-            "Material": "materials/ogre.material"
-          }
-        ],
-        [
-          "Rotate",
-          {
-            "Speed": 45
-          }
-        ]
-      ]
-    },
-    {
-      "Name": "Ogre",
-      "Position": [ 0, 0, -6 ],
-      "Components": [
-        [
-          "MeshRenderer",
-          {
-            "Mesh": "meshes/ogre.mesh",
-            "Material": "materials/ogre.material"
-          }
-        ],
-        [
-          "Rotate",
-          {
-            "Speed": 45
-          }
-        ]
-      ]
-    },
-    {
-      "Name": "Ogre",
-      "Position": [ 3, 0, -6 ],
-      "Components": [
-        [
-          "MeshRenderer",
-          {
-            "Mesh": "meshes/ogre.mesh",
-            "Material": "materials/ogre.material"
-          }
-        ],
-        [
-          "Rotate",
-          {
-            "Speed": 45
-          }
-        ]
-      ]
-    },
-    {
-      "Name": "Ogre",
-      "Position": [ 6, 0, -6 ],
-      "Components": [
-        [
-          "MeshRenderer",
-          {
-            "Mesh": "meshes/ogre.mesh",
-            "Material": "materials/ogre.material"
-          }
-        ],
-        [
-          "Rotate",
-          {
-            "Speed": 45
-          }
-        ]
-      ]
-    },
-    {
-      "Name": "Ogre",
-      "Position": [ -6, 0, -3 ],
-      "Components": [
-        [
-          "MeshRenderer",
-          {
-            "Mesh": "meshes/ogre.mesh",
-            "Material": "materials/ogre.material"
-          }
-        ],
-        [
-          "Rotate",
-          {
-            "Speed": 45
-          }
-        ]
-      ]
-    },
-    {
-      "Name": "Ogre",
-      "Position": [ -3, 0, -3 ],
-      "Components": [
-        [
-          "MeshRenderer",
-          {
-            "Mesh": "meshes/ogre.mesh",
-            "Material": "materials/ogre.material"
-          }
-        ],
-        [
-          "Rotate",
-          {
-            "Speed": 45
-          }
-        ]
-      ]
-    },
-    {
-      "Name": "Ogre",
-      "Position": [ 0, 0, -3 ],
-      "Components": [
-        [
-          "MeshRenderer",
-          {
-            "Mesh": "meshes/ogre.mesh",
-            "Material": "materials/ogre.material"
-          }
-        ],
-        [
-          "Rotate",
-          {
-            "Speed": 45
-          }
-        ]
-      ]
-    },
-    {
-      "Name": "Ogre",
-      "Position": [ 3, 0, -3 ],
-      "Components": [
-        [
-          "MeshRenderer",
-          {
-            "Mesh": "meshes/ogre.mesh",
-            "Material": "materials/ogre.material"
-          }
-        ],
-        [
-          "Rotate",
-          {
-            "Speed": 45
-          }
-        ]
-      ]
-    },
-    {
-      "Name": "Ogre",
-      "Position": [ 6, 0, -3 ],
-      "Components": [
-        [
-          "MeshRenderer",
-          {
-            "Mesh": "meshes/ogre.mesh",
-            "Material": "materials/ogre.material"
-          }
-        ],
-        [
-          "Rotate",
-          {
-            "Speed": 45
-          }
-        ]
-      ]
-    },
-    {
-      "Name": "Ogre",
-      "Position": [ -6, 0, 0 ],
-      "Components": [
-        [
-          "MeshRenderer",
-          {
-            "Mesh": "meshes/ogre.mesh",
-            "Material": "materials/ogre.material"
-          }
-        ],
-        [
-          "Rotate",
-          {
-            "Speed": 45
-          }
-        ]
-      ]
-    },
-    {
-      "Name": "Ogre",
-      "Position": [ -3, 0, 0 ],
-      "Components": [
-        [
-          "MeshRenderer",
-          {
-            "Mesh": "meshes/ogre.mesh",
-            "Material": "materials/ogre.material"
-          }
-        ],
-        [
-          "Rotate",
-          {
-            "Speed": 45
-          }
-        ]
-      ]
-    },
-    {
+    /*{
       "Name": "Ogre",
       "Position": [ 0, 0, 0 ],
       "Components": [
@@ -298,309 +138,226 @@
           }
         ]
       ]
-    },
+    },*/
     {
-      "Name": "Ogre",
-      "Position": [ 3, 0, 0 ],
+      "Name": "Floor",
+      "Position": [ 0, 0, 0 ],
       "Components": [
         [
           "MeshRenderer",
           {
-            "Mesh": "meshes/ogre.mesh",
-            "Material": "materials/ogre.material"
-          }
-        ],
-        [
-          "Rotate",
-          {
-            "Speed": 45
+            "Mesh": "meshes/floor.mesh",
+            "Material": "materials/floor.material"
           }
         ]
       ]
     },
     {
-      "Name": "Ogre",
-      "Position": [ 6, 0, 0 ],
+      "Name": "Floor",
+      "Position": [ -2, 0, 0 ],
+      "Rotation": [ 0, 0, 90 ],
       "Components": [
         [
           "MeshRenderer",
           {
-            "Mesh": "meshes/ogre.mesh",
-            "Material": "materials/ogre.material"
-          }
-        ],
-        [
-          "Rotate",
-          {
-            "Speed": 45
+            "Mesh": "meshes/floor.mesh",
+            "Material": "materials/floor.material"
           }
         ]
       ]
     },
     {
-      "Name": "Ogre",
-      "Position": [ -6, 0, 3 ],
+      "Name": "Floor",
+      "Position": [ -4, 0, 0 ],
+      "Rotation": [ 0, 0, 270 ],
       "Components": [
         [
           "MeshRenderer",
           {
-            "Mesh": "meshes/ogre.mesh",
-            "Material": "materials/ogre.material"
-          }
-        ],
-        [
-          "Rotate",
-          {
-            "Speed": 45
+            "Mesh": "meshes/floor.mesh",
+            "Material": "materials/floor.material"
           }
         ]
       ]
     },
     {
-      "Name": "Ogre",
-      "Position": [ -3, 0, 3 ],
+      "Name": "Floor",
+      "Position": [ -6, 0, 0 ],
+      "Rotation": [ 0, 0, 180 ],
       "Components": [
         [
           "MeshRenderer",
           {
-            "Mesh": "meshes/ogre.mesh",
-            "Material": "materials/ogre.material"
-          }
-        ],
-        [
-          "Rotate",
-          {
-            "Speed": 45
+            "Mesh": "meshes/floor.mesh",
+            "Material": "materials/floor.material"
           }
         ]
       ]
     },
     {
-      "Name": "Ogre",
-      "Position": [ 0, 0, 3 ],
+      "Name": "Floor",
+      "Position": [ 0, 2, 0 ],
       "Components": [
         [
           "MeshRenderer",
           {
-            "Mesh": "meshes/ogre.mesh",
-            "Material": "materials/ogre.material"
-          }
-        ],
-        [
-          "Rotate",
-          {
-            "Speed": 45
+            "Mesh": "meshes/floor.mesh",
+            "Material": "materials/floor.material"
           }
         ]
       ]
     },
     {
-      "Name": "Ogre",
-      "Position": [ 3, 0, 3 ],
+      "Name": "Floor",
+      "Position": [ -2, 2, 0 ],
+      "Rotation": [ 0, 0, 270 ],
       "Components": [
         [
           "MeshRenderer",
           {
-            "Mesh": "meshes/ogre.mesh",
-            "Material": "materials/ogre.material"
-          }
-        ],
-        [
-          "Rotate",
-          {
-            "Speed": 45
+            "Mesh": "meshes/floor.mesh",
+            "Material": "materials/floor.material"
           }
         ]
       ]
     },
     {
-      "Name": "Ogre",
-      "Position": [ 6, 0, 3 ],
+      "Name": "Floor",
+      "Position": [ -4, 2, 0 ],
+      "Rotation": [ 0, 0, 270 ],
       "Components": [
         [
           "MeshRenderer",
           {
-            "Mesh": "meshes/ogre.mesh",
-            "Material": "materials/ogre.material"
-          }
-        ],
-        [
-          "Rotate",
-          {
-            "Speed": 45
+            "Mesh": "meshes/floor.mesh",
+            "Material": "materials/floor.material"
           }
         ]
       ]
     },
     {
-      "Name": "Ogre",
-      "Position": [ -6, 0, 6 ],
+      "Name": "Floor",
+      "Position": [ -6, 2, 0 ],
+      "Rotation": [ 0, 0, 90 ],
       "Components": [
         [
           "MeshRenderer",
           {
-            "Mesh": "meshes/ogre.mesh",
-            "Material": "materials/ogre.material"
-          }
-        ],
-        [
-          "Rotate",
-          {
-            "Speed": 45
+            "Mesh": "meshes/floor.mesh",
+            "Material": "materials/floor.material"
           }
         ]
       ]
     },
     {
-      "Name": "Ogre",
-      "Position": [ -3, 0, 6 ],
+      "Name": "Floor",
+      "Position": [ 0, 4, 0 ],
       "Components": [
         [
           "MeshRenderer",
           {
-            "Mesh": "meshes/ogre.mesh",
-            "Material": "materials/ogre.material"
-          }
-        ],
-        [
-          "Rotate",
-          {
-            "Speed": 45
+            "Mesh": "meshes/floor.mesh",
+            "Material": "materials/floor.material"
           }
         ]
       ]
     },
     {
-      "Name": "Ogre",
-      "Position": [ 0, 0, 6 ],
+      "Name": "Floor",
+      "Position": [ -2, 4, 0 ],
+      "Rotation": [ 0, 0, 90 ],
       "Components": [
         [
           "MeshRenderer",
           {
-            "Mesh": "meshes/ogre.mesh",
-            "Material": "materials/ogre.material"
-          }
-        ],
-        [
-          "Rotate",
-          {
-            "Speed": 45
+            "Mesh": "meshes/floor.mesh",
+            "Material": "materials/floor.material"
           }
         ]
       ]
     },
     {
-      "Name": "Ogre",
-      "Position": [ 3, 0, 6 ],
+      "Name": "Floor",
+      "Position": [ -4, 4, 0 ],
+      "Rotation": [ 0, 0, 270 ],
       "Components": [
         [
           "MeshRenderer",
           {
-            "Mesh": "meshes/ogre.mesh",
-            "Material": "materials/ogre.material"
-          }
-        ],
-        [
-          "Rotate",
-          {
-            "Speed": 45
+            "Mesh": "meshes/floor.mesh",
+            "Material": "materials/floor.material"
           }
         ]
       ]
     },
     {
-      "Name": "Ogre",
-      "Position": [ 6, 0, 6 ],
+      "Name": "Floor",
+      "Position": [ -6, 4, 0 ],
+      "Rotation": [ 0, 0, 180 ],
       "Components": [
         [
           "MeshRenderer",
           {
-            "Mesh": "meshes/ogre.mesh",
-            "Material": "materials/ogre.material"
-          }
-        ],
-        [
-          "Rotate",
-          {
-            "Speed": 45
-          }
-        ]
-      ]
-    },
-       {
-      "Name": "Cube1",
-      "Components": [
-        [
-          "MeshRenderer",
-          {
-            "Mesh": "meshes/cube.mesh",
-            "Material": "materials/cratePurple.material"
-          }
-        ],
-        [
-          "Rotate",
-          {
-            "Speed": 45
-          }
-        ]
-      ]
-    },
-      {
-      "Name": "Cube2",
-      "Position": [ 4, 0.5, 0 ],
-      "Components": [
-        [
-          "MeshRenderer",
-          {
-            "Mesh": "meshes/cube.mesh",
-            "Material": "materials/crate.material"
-          }
-        ],
-        [
-          "Rotate",
-          {
-            "Speed": 45
+            "Mesh": "meshes/floor.mesh",
+            "Material": "materials/floor.material"
           }
         ]
       ]
     },
     {
-      "Name": "Sphere",
-      "Position": [ -2, -3, 0 ],
+      "Name": "Floor",
+      "Position": [ 0, 6, 0 ],
       "Components": [
         [
           "MeshRenderer",
           {
-            "Mesh": "meshes/sphere.mesh",
-            "Material": "materials/sphere.material"
-          }
-        ],
-        [
-          "Rotate",
-          {
-            "Speed": 45
+            "Mesh": "meshes/floor.mesh",
+            "Material": "materials/floor.material"
           }
         ]
       ]
     },
     {
-      "Name": "Sphere",
-      "Position": [ -3, -2, 2 ],
+      "Name": "Floor",
+      "Position": [ -2, 6, 0 ],
+      "Rotation": [ 0, 0, 270 ],
       "Components": [
         [
           "MeshRenderer",
           {
-            "Mesh": "meshes/sphere.mesh",
-            "Material": "materials/spherePurple.material"
+            "Mesh": "meshes/floor.mesh",
+            "Material": "materials/floor.material"
           }
-        ],
+        ]
+      ]
+    },
+    {
+      "Name": "Floor",
+      "Position": [ -4, 6, 0 ],
+      "Rotation": [ 0, 0, 270 ],
+      "Components": [
         [
-          "Rotate",
+          "MeshRenderer",
           {
-            "Speed": 45
+            "Mesh": "meshes/floor.mesh",
+            "Material": "materials/floor.material"
+          }
+        ]
+      ]
+    },
+    {
+      "Name": "Floor",
+      "Position": [ -6, 6, 0 ],
+      "Rotation": [ 0, 0, 90 ],
+      "Components": [
+        [
+          "MeshRenderer",
+          {
+            "Mesh": "meshes/floor.mesh",
+            "Material": "materials/floor.material"
           }
         ]
       ]
     }
   ]
-    }
+}

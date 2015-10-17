@@ -29,5 +29,5 @@ float4 main(sInput input) : SV_TARGET
         normalMap.y * input.binormal + 
         normalMap.z * input.normal);
 
-    return calculateLighting(input.worldPos.xyz, diffuse, normal, materialMap);
+    return calculateLighting(input.worldPos.xyz, diffuse, normal, materialMap) * normalMap.a;
 }

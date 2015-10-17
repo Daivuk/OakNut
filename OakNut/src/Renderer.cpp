@@ -1,3 +1,4 @@
+#include "AmbientLight.h"
 #include "Camera.h"
 #include "ComponentManager.h"
 #include "DirectionalLight.h"
@@ -34,6 +35,7 @@ void onut::Renderer::onDraw()
     m_solids.clear();
     m_pointLights.clear();
     m_directionalLights.clear();
+    m_ambientColor = glm::vec4(0, 0, 0, 0);
     m_pCamera = nullptr;
     pRootNode->visit([this](Entity* pEntity)
     {
@@ -67,7 +69,7 @@ void onut::Renderer::onDraw()
         }
 
         // Draw
-        draw(renderAction.pMesh, renderAction.pMaterial, *renderAction.pTransform, m_pointLightsPassThrough, m_directionalLightsPassThrough);
+        draw(renderAction.pMesh, renderAction.pMaterial, *renderAction.pTransform, m_ambientColor, m_pointLightsPassThrough, m_directionalLightsPassThrough);
     }
 
     // Draw transparents
@@ -106,5 +108,10 @@ void onut::Renderer::collectRenderable(Entity* pEntity)
     if (pDirectionalLight)
     {
         m_directionalLights.push_back(pDirectionalLight);
+    }
+    auto pAmbientLight = pEntity->getComponent<AmbientLight>();
+    if (pAmbientLight)
+    {
+        m_ambientColor += pAmbientLight->getColor();
     }
 }

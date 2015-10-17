@@ -35,6 +35,7 @@ cbuffer cbLights : register(b2)
     int pointLightCount;
     int directionalLightCount;
     float2 cbLights_padding1;
+    float4 ambientColor;
     sPointLight pointLights[MAX_POINT_LIGHTS];
     sDirectionalLight directionalLights[MAX_DIRECTIONAL_LIGHTS];
 };

@@ -36,12 +36,11 @@
     <ClCompile Include="src\MeshRenderer.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\Renderer_d3d11.cpp" />
-    <ClCompile Include="src\DirectionalLight.cpp" />
-    <ClCompile Include="src\PointLight.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\EntityFactory.cpp" />
     <ClCompile Include="src\Component.cpp" />
     <ClCompile Include="src\ComponentManager.cpp" />
+    <ClCompile Include="src\Random.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Main.h" />
@@ -77,6 +76,8 @@
     <ClInclude Include="include\EntityFactory.h" />
     <ClInclude Include="include\Component.h" />
     <ClInclude Include="include\ComponentManager.h" />
+    <ClInclude Include="include\AmbientLight.h" />
+    <ClInclude Include="include\Random.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="json">

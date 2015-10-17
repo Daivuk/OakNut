@@ -1,5 +1,6 @@
 #include "Rotate.h"
 #include "Sample.h"
+#include "Torch.h"
 
 #include <ObjectLibrary.h>
 #include <SceneManager.h>
@@ -11,5 +12,6 @@ onut::Game* onut::Game::CreateGame()
 
 Sample::Sample()
 {
-    onut::ObjectLibrary::registerObject<Rotate>("Rotate");
+    REG_COMPONENT(Rotate);
+    REG_COMPONENT(Torch);
 }

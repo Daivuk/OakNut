@@ -70,7 +70,7 @@ void onut::Renderer_d3d11::onCreate()
 
     m_pFlatNormalTexture = Texture::create();
     m_pFlatNormalTexture->retain();
-    uint32_t flatNormalPixel = 0xff8080ff;
+    uint32_t flatNormalPixel = 0xffff8080;
     m_pFlatNormalTexture->setData(1, 1, &flatNormalPixel);
 
     m_pBlackTexture = Texture::create();
@@ -420,6 +420,7 @@ void onut::Renderer_d3d11::begin()
 void onut::Renderer_d3d11::draw(Mesh* pMesh,
                                 Material* pMaterial,
                                 const glm::mat4& transform,
+                                const glm::vec4& ambientColor,
                                 const std::vector<onut::PointLight*>& pointLights,
                                 const std::vector<onut::DirectionalLight*>& directionalLights)
 {
@@ -446,6 +447,11 @@ void onut::Renderer_d3d11::draw(Mesh* pMesh,
         m_pDeviceContext->Map(m_pLightsBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
 
         auto &lights = *(cbLights*)map.pData;
+
+        // Ambient
+        lights.ambientColor = ambientColor;
+
+        // Point lights
         lights.pointLightCount = static_cast<int32_t>(pointLights.size());
         for (int32_t i = 0; i < lights.pointLightCount && i < MAX_POINT_LIGHTS; ++i)
         {
@@ -455,6 +461,7 @@ void onut::Renderer_d3d11::draw(Mesh* pMesh,
             lights.pointLights[i].color = pointLights[i]->getColor();
         }
 
+        // Directionals
         lights.directionalLightCount = static_cast<int32_t>(directionalLights.size());
         for (int32_t i = 0; i < lights.directionalLightCount && i < MAX_DIRECTIONAL_LIGHTS; ++i)
         {
