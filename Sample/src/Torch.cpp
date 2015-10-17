@@ -27,7 +27,7 @@ void Torch::onUpdate(const onut::TimeInfo& timeInfo)
     m_progress -= timeInfo.fDeltaTime;
     if (m_progress <= 0)
     {
-        m_progress += getSpeed();
+        m_progress = getSpeed();
         m_brightness = m_targetBrightness;
         m_targetBrightness = onut::randf(m_originalColor.a - getAmount(), m_originalColor.a + getAmount());
         m_targetBrightness = glm::max(m_targetBrightness, 0.f);

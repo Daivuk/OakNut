@@ -1,0 +1,5 @@
+{
+  "Diffuse": "textures/Dungeon2Floor_diff.png",
+  "NormalMap": "textures/Dungeon2Floor_norm.png",
+  "MaterialMap": "textures/Dungeon2Floor_mat.png"
+}

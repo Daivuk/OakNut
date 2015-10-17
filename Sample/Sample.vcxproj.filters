@@ -19,5 +19,7 @@
     <None Include="assets\materials\spherePurple.material" />
     <None Include="assets\materials\ogre.material" />
     <None Include="assets\materials\floor.material" />
+    <None Include="assets\materials\floor2.material" />
+    <None Include="assets\materials\wall1.material" />
   </ItemGroup>
 </Project>
