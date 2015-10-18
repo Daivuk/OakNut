@@ -19,6 +19,7 @@ namespace onut
         virtual bool isCreated() const;
         ComponentManager* getComponentManager() const;
         Entity* getEntity() const;
+        Entity* getParent() const;
 
         // Component events
         virtual void onCreate() {}

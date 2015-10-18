@@ -16,6 +16,10 @@ namespace onut
         static std::vector<std::string> getPrefabNames();
         static bool deletePrefab(const std::string& prefabName);
 
+        // Common entity helpers
+        static Entity* createPointLight(const glm::vec3& position, float radius, const glm::vec4& color);
+        static Entity* createMesh(const glm::vec3& position, const std::string& meshFilename, const std::string& materialFilename);
+
     private:
         struct EntityPrefab
         {

@@ -28,3 +28,10 @@ onut::Entity* onut::Component::getEntity() const
 {
     return dynamic_cast<Entity*>(m_pComponentManager);
 }
+
+onut::Entity* onut::Component::getParent() const
+{
+    auto pEntity = getEntity();
+    if (!pEntity) return nullptr;
+    return pEntity->getParent();
+}

@@ -1,5 +1,11 @@
+#include "ContentManager.h"
 #include "Entity.h"
 #include "EntityFactory.h"
+#include "Game.h"
+#include "Material.h"
+#include "Mesh.h"
+#include "MeshRenderer.h"
+#include "PointLight.h"
 
 std::unordered_map<std::string, onut::EntityFactory::EntityPool> onut::EntityFactory::s_pools;
 
@@ -76,4 +82,48 @@ onut::EntityFactory::EntityPool::EntityPool(Entity* pPrefab, int poolCount)
 onut::EntityFactory::EntityPool::~EntityPool()
 {
     if (prefabs) delete[] prefabs;
+}
+
+// Helpers
+onut::Entity* onut::EntityFactory::createPointLight(const glm::vec3& position, float radius, const glm::vec4& color)
+{
+    auto pEntity = new onut::Entity();
+    pEntity->setPosition(position);
+    auto pPointLight = pEntity->addComponent<onut::PointLight>();
+    pPointLight->setRadius(radius);
+    pPointLight->setColor(color);
+
+    return pEntity;
+}
+
+onut::Entity* onut::EntityFactory::createMesh(const glm::vec3& position, const std::string& meshFilename, const std::string& materialFilename)
+{
+    auto pContentManager = onut::Game::getGame()->getComponent<onut::ContentManager>();
+
+    auto pMesh = pContentManager->getResource<onut::Mesh>(meshFilename);
+    if (!pMesh)
+    {
+        pMesh = onut::Mesh::create();
+        auto bRet = pMesh->load(meshFilename);
+        assert(bRet);
+        pContentManager->addResource(meshFilename, pMesh);
+    }
+
+    auto pMaterial = pContentManager->getResource<onut::Material>(materialFilename);
+    if (!pMaterial)
+    {
+        pMaterial = new onut::Material();
+        auto bRet = pMaterial->loadPropertiesFromFile(materialFilename);
+        assert(bRet);
+        pContentManager->addResource(materialFilename, pMaterial);
+    }
+
+    auto pEntity = new onut::Entity();
+    pEntity->setPosition(position);
+
+    auto pMeshRenderer = pEntity->addComponent<onut::MeshRenderer>();
+    pMeshRenderer->setMesh(pMesh);
+    pMeshRenderer->setMaterial(pMaterial);
+
+    return pEntity;
 }

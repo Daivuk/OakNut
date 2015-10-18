@@ -4,22 +4,52 @@
     <ClCompile Include="src\Sample.cpp" />
     <ClCompile Include="src\Rotate.cpp" />
     <ClCompile Include="src\Torch.cpp" />
+    <ClCompile Include="src\LevelGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Sample.h" />
     <ClInclude Include="src\Rotate.h" />
     <ClInclude Include="src\Torch.h" />
+    <ClInclude Include="src\LevelGenerator.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\scenes\sample.json" />
-    <None Include="assets\game.json" />
-    <None Include="assets\materials\crate.material" />
-    <None Include="assets\materials\cratePurple.material" />
-    <None Include="assets\materials\sphere.material" />
-    <None Include="assets\materials\spherePurple.material" />
-    <None Include="assets\materials\ogre.material" />
-    <None Include="assets\materials\floor.material" />
-    <None Include="assets\materials\floor2.material" />
-    <None Include="assets\materials\wall1.material" />
+    <None Include="assets\materials\floor2.material">
+      <Filter>Materials</Filter>
+    </None>
+    <None Include="assets\materials\crate.material">
+      <Filter>Materials</Filter>
+    </None>
+    <None Include="assets\materials\cratePurple.material">
+      <Filter>Materials</Filter>
+    </None>
+    <None Include="assets\materials\floor.material">
+      <Filter>Materials</Filter>
+    </None>
+    <None Include="assets\materials\ogre.material">
+      <Filter>Materials</Filter>
+    </None>
+    <None Include="assets\materials\sphere.material">
+      <Filter>Materials</Filter>
+    </None>
+    <None Include="assets\materials\spherePurple.material">
+      <Filter>Materials</Filter>
+    </None>
+    <None Include="assets\materials\wall1.material">
+      <Filter>Materials</Filter>
+    </None>
+    <None Include="assets\game.json">
+      <Filter>scenes</Filter>
+    </None>
+    <None Include="assets\scenes\sample.json">
+      <Filter>scenes</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Materials">
+      <UniqueIdentifier>{cd7b4549-3ea4-492c-8b7d-3e1ca7761b31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scenes">
+      <UniqueIdentifier>{0926ad1f-3e2d-420d-822e-411a488a4aa5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

@@ -53,6 +53,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>../OakNut/include</AdditionalIncludeDirectories>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -83,11 +84,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\LevelGenerator.cpp" />
     <ClCompile Include="src\Rotate.cpp" />
     <ClCompile Include="src\Sample.cpp" />
     <ClCompile Include="src\Torch.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\LevelGenerator.h" />
     <ClInclude Include="src\Rotate.h" />
     <ClInclude Include="src\Sample.h" />
     <ClInclude Include="src\Torch.h" />

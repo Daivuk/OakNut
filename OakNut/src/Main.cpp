@@ -9,6 +9,7 @@
 #include "MeshRenderer.h"
 #include "ObjectLibrary.h"
 #include "PointLight.h"
+#include "Random.h"
 #include "Renderer.h"
 #include "Renderer_d3d11.h"
 #include "SceneManager.h"

@@ -21,6 +21,7 @@ namespace onut
 
         // Insertion of components
         bool addComponent(Component* pComponent);
+        template<typename Tcomponent> Tcomponent* addComponent();
         bool insertComponentAtBeginning(Component* pComponent);
         bool insertComponentBefore(Component* pBefore, Component* pComponent);
         bool insertComponentAfter(Component* pAfter, Component* pComponent);
@@ -41,7 +42,21 @@ namespace onut
     };
 
     template<typename Tcomponent> 
-    inline bool insertComponentBefore(Component* pComponent)
+    inline Tcomponent* ComponentManager::addComponent()
+    {
+        if (getComponent<Tcomponent>()) return nullptr;
+        auto pComponent = new Tcomponent();
+        auto bRet = addComponent(pComponent);
+        if (!bRet)
+        {
+            pComponent->release();
+            pComponent = nullptr;
+        }
+        return pComponent;
+    }
+
+    template<typename Tcomponent> 
+    inline bool ComponentManager::insertComponentBefore(Component* pComponent)
     {
         auto pBefore = getComponent<Tcomponent>();
         if (!pBefore) return false;
@@ -49,7 +64,7 @@ namespace onut
     }
 
     template<typename Tcomponent> 
-    inline bool insertComponentAfter(Component* pComponent)
+    inline bool ComponentManager::insertComponentAfter(Component* pComponent)
     {
         auto pAfter = getComponent<Tcomponent>();
         if (!pAfter) return false;

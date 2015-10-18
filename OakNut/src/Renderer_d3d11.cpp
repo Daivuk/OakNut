@@ -456,7 +456,7 @@ void onut::Renderer_d3d11::draw(Mesh* pMesh,
         for (int32_t i = 0; i < lights.pointLightCount && i < MAX_POINT_LIGHTS; ++i)
         {
             auto pLightEntity = dynamic_cast<Entity*>(pointLights[i]->getComponentManager());
-            lights.pointLights[i].position = pLightEntity->getPosition();
+            lights.pointLights[i].position = glm::vec3{pLightEntity->getWorldMatrix()[3]};
             lights.pointLights[i].radius = pointLights[i]->getRadius();
             lights.pointLights[i].color = pointLights[i]->getColor();
         }

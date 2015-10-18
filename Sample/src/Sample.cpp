@@ -1,3 +1,4 @@
+#include "LevelGenerator.h"
 #include "Rotate.h"
 #include "Sample.h"
 #include "Torch.h"
@@ -12,6 +13,7 @@ onut::Game* onut::Game::CreateGame()
 
 Sample::Sample()
 {
+    REG_COMPONENT(LevelGenerator);
     REG_COMPONENT(Rotate);
     REG_COMPONENT(Torch);
 }
