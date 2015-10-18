@@ -1,6 +1,7 @@
 #pragma once
 #include "glm/glm.hpp"
 
+#include <algorithm>
 #include <vector>
 
 namespace onut
@@ -72,6 +73,18 @@ namespace onut
     {
         auto rnd = randi(vec.size() - 1);
         return vec[rnd];
+    }
+
+    /**
+    Shuffle an array
+    */
+    template<typename T>
+    void shuffle(std::vector<T>& vec)
+    {
+        std::random_shuffle(vec.begin(), vec.end(), [](int i)
+        {
+            return randi() % i;
+        });
     }
 
     /**

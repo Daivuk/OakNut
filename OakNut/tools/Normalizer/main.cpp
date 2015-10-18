@@ -126,7 +126,7 @@ void normalMap()
             }
             avg /= (AMBIENT_SIZE * 2 + 1) * (AMBIENT_SIZE * 2 + 1);
             avg = avg - s[4];
-            avg = avg * 1000 / 255;
+            avg = avg * (AMBIENT_SIZE * 128) / 255;
             avg = 255 - clamp(avg, 0, 255);
             pNewData[y * img.w + x] =
                 ((avg << 24) & 0xff000000) |

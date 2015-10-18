@@ -8,6 +8,9 @@
 #include "Renderer.h"
 #include "SceneManager.h"
 
+#include <algorithm>
+#include <glm/gtx/norm.hpp>
+
 onut::Renderer::Renderer()
 {
     m_solids.reserve(4096); // This will grow automatically anyway
@@ -56,11 +59,19 @@ void onut::Renderer::onDraw()
     {
         if (!renderAction.pMesh || !renderAction.pMaterial || !renderAction.pTransform) continue;
 
+        // Sort point lights by distance
+        const auto& position = (*renderAction.pTransform)[3];
+
         // Setup lights
         m_pointLightsPassThrough.clear();
         for (auto pPointLight : m_pointLights)
         {
-            m_pointLightsPassThrough.push_back(pPointLight);
+            const auto& posA = pPointLight->getEntity()->getWorldMatrix()[3];
+            auto disA = glm::distance2(posA, position);
+            if (disA < pPointLight->getRadius() * pPointLight->getRadius())
+            {
+                m_pointLightsPassThrough.push_back(pPointLight);
+            }
         }
         m_directionalLightsPassThrough.clear();
         for (auto pDirectionalLight : m_directionalLights)

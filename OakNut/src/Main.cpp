@@ -36,6 +36,8 @@ void onut::Main::main()
     REG_COMPONENT2(Window_win, Window);
 #endif
 
+    randomizeSeed();
+
     auto pGame = Game::CreateGame();
     pGame->retain();
 

@@ -3,13 +3,15 @@
   "Children": [
     {
       "Name": "Camera",
-      "Fov": 50,
-      "Position": [ 6, 0, 7 ],
+      "Position": [ 68, 60, 7 ],
       "Rotation": [ -60, 0, 30 ],
+      //"Position": [ 64, 64, 100 ],
+      //"Rotation": [ -90, 0, 0 ],
       "Components": [
         [
           "Camera",
           {
+            "Fov": 50,
             "Active": true
           }
         ]
@@ -31,6 +33,19 @@
           "AmbientLight",
           {
             "Color": [ 0.25, 0.5, 1, 0.25 ]
+          }
+        ]
+      ]
+    },
+    {
+      "Name": "Player Light",
+      "Position": [ 6, 6, 1.5 ],
+      "Components": [
+        [
+          "PointLight",
+          {
+            "Radius": 4,
+            "Color": [ 1, 1, 1, 0.75 ]
           }
         ]
       ]

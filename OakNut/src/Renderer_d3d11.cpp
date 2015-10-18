@@ -98,6 +98,7 @@ void onut::Renderer_d3d11::createDevice()
     swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
     swapChainDesc.OutputWindow = pWindow->getHandle();
     swapChainDesc.SampleDesc.Count = 1;
+    swapChainDesc.SampleDesc.Quality = 0;
     swapChainDesc.Windowed = TRUE;
 
     // Create the swap chain, device and device context

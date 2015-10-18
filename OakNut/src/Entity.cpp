@@ -40,6 +40,7 @@ const glm::mat4& onut::Entity::getWorldMatrix()
 
 bool onut::Entity::add(Entity* pEntity)
 {
+    if (!pEntity) return false;
     if (m_Children.contains(pEntity)) return false;
     m_Children.push_back(pEntity);
     pEntity->m_pParent = this;
